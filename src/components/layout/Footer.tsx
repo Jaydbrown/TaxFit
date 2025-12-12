@@ -53,7 +53,6 @@ export default function Footer() {
               Your trusted partner in tax excellence since 2015.
             </p>
 
-            {/* Social Links */}
             <div className="flex items-center gap-4">
               {socialLinks.map((social, index) => {
                 const Icon = social.icon;
@@ -73,7 +72,6 @@ export default function Footer() {
             </div>
           </div>
 
-          {/* Quick Links */}
           <div className="lg:col-span-2">
             <h3 className="text-xs uppercase tracking-[0.3em] text-gray-400 mb-6 font-light">
               Quick Links
@@ -92,7 +90,6 @@ export default function Footer() {
             </ul>
           </div>
 
-          {/* Resources */}
           <div className="lg:col-span-2">
             <h3 className="text-xs uppercase tracking-[0.3em] text-gray-400 mb-6 font-light">
               Resources
@@ -111,7 +108,6 @@ export default function Footer() {
             </ul>
           </div>
 
-          {/* Contact */}
           <div className="lg:col-span-4">
             <h3 className="text-xs uppercase tracking-[0.3em] text-gray-400 mb-6 font-light">
               Contact Us
@@ -139,7 +135,6 @@ export default function Footer() {
           </div>
         </div>
 
-        {/* Bottom Bar */}
         <div className="py-8 border-t border-white/10">
           <div className="flex flex-col md:flex-row items-center justify-between gap-4">
             <p className="text-sm text-gray-400 font-light">

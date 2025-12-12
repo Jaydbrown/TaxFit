@@ -62,7 +62,6 @@ export default function Header() {
             </div>
           </Link>
 
-          {/* Desktop Navigation */}
           <nav className="hidden lg:flex items-center gap-8">
             {navLinks.map((link) => (
               <Link
@@ -75,7 +74,6 @@ export default function Header() {
             ))}
           </nav>
 
-          {/* Right Section */}
           <div className="flex items-center gap-4">
             {isAuthenticated && user ? (
               <div className="relative" ref={userMenuRef}>
@@ -142,8 +140,6 @@ export default function Header() {
                 </Link>
               </div>
             )}
-
-            {/* Mobile Menu Toggle */}
             <button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
               className="lg:hidden p-2 text-gray-700 hover:bg-gray-100 rounded"
@@ -153,7 +149,6 @@ export default function Header() {
           </div>
         </div>
 
-        {/* Mobile Menu */}
         {isMenuOpen && (
           <div className="lg:hidden border-t border-gray-200 py-6 space-y-4">
             {navLinks.map((link) => (

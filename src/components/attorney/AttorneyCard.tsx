@@ -18,7 +18,6 @@ export default function AttorneyCard({ attorney }: AttorneyCardProps) {
       to={`/find-attorney/${attorney.id}`}
       className="block bg-white rounded-lg border border-gray-200 shadow-sm hover:shadow-md transition-all duration-200 overflow-hidden group"
     >
-      {/* Header */}
       <div className="p-6">
         <div className="flex items-start gap-4 mb-4">
           <Avatar
@@ -51,7 +50,6 @@ export default function AttorneyCard({ attorney }: AttorneyCardProps) {
           </div>
         </div>
 
-        {/* Specializations */}
         {profile.specializations && profile.specializations.length > 0 && (
           <div className="flex flex-wrap gap-2 mb-4">
             {profile.specializations.slice(0, 3).map((spec, index) => (
@@ -67,7 +65,6 @@ export default function AttorneyCard({ attorney }: AttorneyCardProps) {
           </div>
         )}
 
-        {/* Info Grid */}
         <div className="grid grid-cols-2 gap-3 mb-4">
           <div className="flex items-center text-sm text-gray-600">
             <Briefcase className="w-4 h-4 mr-1.5 flex-shrink-0" />
@@ -80,14 +77,14 @@ export default function AttorneyCard({ attorney }: AttorneyCardProps) {
           </div>
         </div>
 
-        {/* Bio */}
+
         {profile.bio && (
           <p className="text-sm text-gray-600 line-clamp-2 mb-4">
             {profile.bio}
           </p>
         )}
 
-        {/* Footer */}
+
         <div className="flex items-center justify-between pt-4 border-t border-gray-100">
           {profile.hourlyRate ? (
             <div className="flex items-center text-gray-900">
@@ -103,7 +100,7 @@ export default function AttorneyCard({ attorney }: AttorneyCardProps) {
           <button
             onClick={(e) => {
               e.preventDefault();
-              // Handle booking
+
             }}
             className="px-4 py-2 bg-primary-500 hover:bg-primary-600 text-white text-sm font-medium rounded-lg transition-colors"
           >

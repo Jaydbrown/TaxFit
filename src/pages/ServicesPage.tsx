@@ -112,7 +112,6 @@ const approach = [
 export default function ServicesPage() {
   return (
     <Layout>
-      {/* Hero */}
       <section className="relative py-32 bg-white">
         <div className="container mx-auto px-6 md:px-12 lg:px-16">
           <div className="max-w-6xl mx-auto">
@@ -155,21 +154,16 @@ export default function ServicesPage() {
           </div>
         </div>
       </section>
-
-      {/* Services Grid */}
       <section className="py-32 bg-gray-50">
         <div className="container mx-auto px-6 md:px-12 lg:px-16">
           <div className="max-w-7xl mx-auto space-y-24">
             {services.map((service, index) => (
               <div key={index} className="grid grid-cols-1 lg:grid-cols-12 gap-12 pb-24 border-b border-gray-200 last:border-0">
-                {/* Number */}
                 <div className="lg:col-span-2">
                   <div className="text-[140px] font-extralight text-gray-200 leading-none">
                     {service.number}
                   </div>
                 </div>
-
-                {/* Content */}
                 <div className="lg:col-span-10 space-y-8">
                   <div className="space-y-4">
                     <h2 className="text-4xl md:text-5xl font-light text-gray-900">
@@ -201,8 +195,6 @@ export default function ServicesPage() {
           </div>
         </div>
       </section>
-
-      {/* Approach */}
       <section className="py-32 bg-white">
         <div className="container mx-auto px-6 md:px-12 lg:px-16">
           <div className="max-w-6xl mx-auto">
@@ -236,8 +228,6 @@ export default function ServicesPage() {
           </div>
         </div>
       </section>
-
-      {/* CTA */}
       <section className="py-32 bg-gray-50">
         <div className="container mx-auto px-6 md:px-12 lg:px-16">
           <div className="max-w-4xl mx-auto text-center space-y-12">

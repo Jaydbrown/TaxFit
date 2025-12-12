@@ -94,8 +94,6 @@ export default function BusinessBenefitsSection() {
             );
           })}
         </div>
-
-        {/* CTA Button */}
         <div className="text-center">
           <button className="inline-flex items-center text-primary-500 hover:text-primary-600 font-medium text-lg transition-colors group">
             More Categories

@@ -131,8 +131,6 @@ export default function AttorneyFilters({
           </Button>
         )}
       </div>
-
-      {/* Active Filters Summary */}
       {hasActiveFilters && (
         <div className="mt-4 pt-4 border-t border-gray-200">
           <p className="text-sm text-gray-600 mb-2">Active filters:</p>

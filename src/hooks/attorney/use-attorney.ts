@@ -7,7 +7,6 @@ import {
   AttorneySearchResult,
 } from '@/types';
 
-// Search attorneys hook
 export const useSearchAttorneys = (filters: AttorneySearchFilters) => {
   return useQuery({
     queryKey: ['attorneys', 'search', filters],
@@ -29,7 +28,6 @@ export const useSearchAttorneys = (filters: AttorneySearchFilters) => {
   });
 };
 
-// Get attorney by ID hook
 export const useAttorneyById = (attorneyId: string) => {
   return useQuery({
     queryKey: ['attorney', attorneyId],
@@ -44,7 +42,7 @@ export const useAttorneyById = (attorneyId: string) => {
   });
 };
 
-// Book consultation hook
+
 export const useBookConsultation = () => {
   return useMutation({
     mutationFn: async (bookingData: {

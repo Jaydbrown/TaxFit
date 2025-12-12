@@ -31,7 +31,6 @@ export default function ResetPasswordForm({ token }: ResetPasswordFormProps) {
     resetPasswordMutation.mutate(data);
   };
 
-  // Password strength indicator
   const getPasswordStrength = (pwd: string) => {
     if (!pwd) return { strength: 0, label: '', color: '' };
     

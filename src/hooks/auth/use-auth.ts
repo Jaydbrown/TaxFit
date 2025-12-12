@@ -19,17 +19,14 @@ import {
   ProfileResponse,
 } from '@/types';
 
-// Register hook
 export const useRegister = () => {
   const navigate = useNavigate();
   const { login } = useAuthStore();
 
   return useMutation({
     mutationFn: async (data: RegisterInput) => {
-      // Remove confirmPassword and format data
       const { confirmPassword, phoneNumber, ...rest } = data;
       
-      // Format phone to +234 format if starts with 0
       let formattedPhone = phoneNumber;
       if (phoneNumber.startsWith('0')) {
         formattedPhone = '+234' + phoneNumber.substring(1);
@@ -40,7 +37,7 @@ export const useRegister = () => {
       const registerData = {
         ...rest,
         phoneNumber: formattedPhone,
-        acceptTerms: true // Ensure boolean
+        acceptTerms: true
       };
       
       console.log('📤 Data being sent to API:', registerData);
@@ -66,7 +63,6 @@ export const useRegister = () => {
   });
 };
 
-// Login hook
 export const useLogin = () => {
   const navigate = useNavigate();
   const { login } = useAuthStore();
@@ -101,7 +97,6 @@ export const useLogin = () => {
   });
 };
 
-// Verify email hook
 export const useVerifyEmail = () => {
   const navigate = useNavigate();
   const { login } = useAuthStore();
@@ -119,7 +114,6 @@ export const useVerifyEmail = () => {
   });
 };
 
-// Resend OTP hook
 export const useResendOtp = () => {
   return useMutation({
     mutationFn: async (data: ResendOtpInput) => {
@@ -132,7 +126,6 @@ export const useResendOtp = () => {
   });
 };
 
-// Forgot password hook
 export const useForgotPassword = () => {
   const navigate = useNavigate();
 
@@ -148,7 +141,6 @@ export const useForgotPassword = () => {
   });
 };
 
-// Reset password hook
 export const useResetPassword = () => {
   const navigate = useNavigate();
 
@@ -164,7 +156,6 @@ export const useResetPassword = () => {
   });
 };
 
-// Logout hook
 export const useLogout = () => {
   const navigate = useNavigate();
   const { logout } = useAuthStore();
@@ -188,7 +179,6 @@ export const useLogout = () => {
   });
 };
 
-// Get profile hook
 export const useProfile = () => {
   const { isAuthenticated } = useAuthStore();
 

@@ -221,7 +221,6 @@ export default function LoansPage() {
           </div>
         )}
 
-        {/* Apply for Loan Modal */}
         <Modal
           isOpen={isApplyModalOpen}
           onClose={() => setIsApplyModalOpen(false)}

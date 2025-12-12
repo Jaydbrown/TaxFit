@@ -86,18 +86,14 @@ export default function HomePage() {
         <div className="container mx-auto px-6 md:px-12 lg:px-16 relative z-10">
           <div className="max-w-7xl mx-auto">
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 items-center">
-              {/* Left Content */}
               <div className="lg:col-span-7 space-y-10">
                 <div className="space-y-8">
-                  {/* Minimal mark */}
                   <div className="flex items-center gap-4">
                     <div className="h-px w-16 bg-gray-900"></div>
                     <span className="text-xs uppercase tracking-[0.3em] text-gray-500 font-light">
                       Since 2015
                     </span>
                   </div>
-
-                  {/* Hero headline */}
                   <h1 className="space-y-4">
                     <div className="text-6xl md:text-7xl lg:text-8xl font-extralight text-gray-900 tracking-tight leading-[0.9]">
                       Tax strategy
@@ -106,15 +102,11 @@ export default function HomePage() {
                       <span className="italic">reimagined</span>
                     </div>
                   </h1>
-
-                  {/* Subheadline */}
                   <p className="text-xl md:text-2xl text-gray-600 font-light leading-relaxed max-w-2xl">
                     We partner with the world's most discerning enterprises to craft 
                     tax strategies that are as sophisticated as they are effective.
                   </p>
                 </div>
-
-                {/* CTA */}
                 <div className="flex flex-col sm:flex-row gap-6 items-start">
                   <button 
                     onClick={() => navigate('/register')}
@@ -135,8 +127,6 @@ export default function HomePage() {
                     <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
                   </Link>
                 </div>
-
-                {/* Subtle stats */}
                 <div className="flex items-center gap-12 pt-8 border-t border-gray-200">
                   <div>
                     <div className="text-3xl font-light text-gray-900 mb-1">150,000+</div>
@@ -208,12 +198,11 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Philosophy Section - Museum Layout */}
+  
       <section className="py-32 bg-white">
         <div className="container mx-auto px-6 md:px-12 lg:px-16">
           <div className="max-w-7xl mx-auto">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-24 items-center">
-              {/* Image */}
               <div className="order-2 lg:order-1">
                 <div className="relative">
                   <div className="aspect-[4/5] bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 relative">
@@ -228,7 +217,6 @@ export default function HomePage() {
                     </div>
                   </div>
                   
-                  {/* Stats card */}
                   <div className="absolute -bottom-12 -right-12 bg-white p-10 shadow-2xl">
                     <div className="text-6xl font-extralight text-gray-900 mb-3">99.9<span className="text-3xl">%</span></div>
                     <div className="text-xs uppercase tracking-wider text-gray-500">Client Satisfaction</div>
@@ -237,7 +225,6 @@ export default function HomePage() {
                 </div>
               </div>
 
-              {/* Content */}
               <div className="order-1 lg:order-2 space-y-10">
                 <div className="space-y-6">
                   <div className="flex items-center gap-4">
@@ -395,7 +382,6 @@ export default function HomePage() {
               </h2>
             </div>
 
-            {/* Studies */}
             <div className="space-y-20">
               {caseStudies.map((study, index) => (
                 <div key={index} className="grid grid-cols-1 lg:grid-cols-12 gap-12 pb-20 border-b border-gray-200 last:border-0">
@@ -435,18 +421,13 @@ export default function HomePage() {
           </div>
         </div>
       </section>
-
-      {/* Testimonial - Full Bleed */}
       <section className="py-32 bg-gray-900 text-white">
         <div className="container mx-auto px-6 md:px-12 lg:px-16">
           <div className="max-w-5xl mx-auto">
             <div className="space-y-16">
-              {/* Quote */}
               <blockquote className="text-3xl md:text-4xl lg:text-5xl font-extralight leading-relaxed">
                 "{testimonials[activeTestimonial].quote}"
               </blockquote>
-
-              {/* Attribution */}
               <div className="flex flex-col md:flex-row md:items-end md:justify-between pt-12 border-t border-white/10 gap-8">
                 <div className="space-y-2">
                   <div className="text-xl font-light">{testimonials[activeTestimonial].author}</div>
@@ -458,7 +439,6 @@ export default function HomePage() {
                 </div>
               </div>
 
-              {/* Navigation */}
               <div className="flex gap-4">
                 {testimonials.map((_, index) => (
                   <button
