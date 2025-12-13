@@ -12,7 +12,6 @@ const apiClient: AxiosInstance = axios.create({
   },
 });
 
-// Request interceptor
 apiClient.interceptors.request.use(
   (config: InternalAxiosRequestConfig) => {
     // Get token from localStorage
