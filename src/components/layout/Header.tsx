@@ -43,7 +43,6 @@ export default function Header() {
     { name: 'Find Attorney', path: '/find-attorney' },
   ];
 
-  if ( CurrentPage === navLinks.path)
 
   return (
     <header 

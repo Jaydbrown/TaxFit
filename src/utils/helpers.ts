@@ -1,12 +1,10 @@
 import { clsx, type ClassValue } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 
-// Tailwind class merger
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-// Format currency
 export function formatCurrency(amount: number, currency: string = 'NGN'): string {
   return new Intl.NumberFormat('en-NG', {
     style: 'currency',
@@ -16,20 +14,18 @@ export function formatCurrency(amount: number, currency: string = 'NGN'): string
   }).format(amount);
 }
 
-// Format date
 export function formatDate(date: string | Date, format: 'short' | 'long' | 'full' = 'short'): string {
   const dateObj = typeof date === 'string' ? new Date(date) : date;
   
-  const options: Intl.DateTimeFormatOptions = {
+  const formatOptions: Record<string, Intl.DateTimeFormatOptions> = {
     short: { month: 'short', day: 'numeric', year: 'numeric' },
     long: { month: 'long', day: 'numeric', year: 'numeric' },
     full: { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' },
-  }[format];
+  };
 
-  return new Intl.DateTimeFormat('en-US', options).format(dateObj);
+  return new Intl.DateTimeFormat('en-US', formatOptions[format]).format(dateObj);
 }
 
-// Generate initials from name
 export function getInitials(name: string): string {
   return name
     .split(' ')
@@ -39,13 +35,11 @@ export function getInitials(name: string): string {
     .substring(0, 2);
 }
 
-// Truncate text
 export function truncateText(text: string, maxLength: number): string {
   if (text.length <= maxLength) return text;
   return text.substring(0, maxLength) + '...';
 }
 
-// Debounce function
 export function debounce<T extends (...args: any[]) => any>(
   func: T,
   wait: number

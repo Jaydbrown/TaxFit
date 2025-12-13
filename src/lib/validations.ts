@@ -1,5 +1,6 @@
 import { z } from 'zod';
 
+// Password validation schema
 export const passwordSchema = z
   .string()
   .min(8, 'Password must be at least 8 characters')
@@ -8,18 +9,18 @@ export const passwordSchema = z
   .regex(/[0-9]/, 'Password must contain at least one number')
   .regex(/[@$!%*?&#]/, 'Password must contain at least one special character (@$!%*?&#)');
 
-
+// Email validation
 export const emailSchema = z.string().email('Invalid email address');
 
-
+// Phone validation (Nigerian format - optional but validated if provided)
 export const phoneSchema = z
   .string()
   .min(1, 'Phone number is required');
 
+// User type enum
+export const userTypeEnum = z.enum(['individual', 'business', 'attorney']);
 
-export const userTypeEnum = z.enum(['individual', 'sme', 'company', 'attorney']);
-
-
+// Address schema
 export const addressSchema = z.object({
   street: z.string().min(1, 'Street is required'),
   city: z.string().min(1, 'City is required'),

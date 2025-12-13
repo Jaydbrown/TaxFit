@@ -48,7 +48,8 @@ function App() {
       <Route path="/services" element={<ServicesPage />} />
       <Route path="/about" element={<AboutPage />} />
       <Route path="/find-attorney" element={<FindAttorneyPage />} />
-      <Route path="/find-attorney/:id" element={<AttorneyDetailsPage />} />
+      <Route path="/attorney/:id" element={<AttorneyDetailsPage />} />
+      <Route path="/attorney/:id/hire" element={<ProtectedRoute><AttorneyDetailsPage /></ProtectedRoute>} />
       
       {/* Auth Routes - Public Only */}
       <Route path="/login" element={<PublicOnlyRoute><LoginPage /></PublicOnlyRoute>} />

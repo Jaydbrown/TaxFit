@@ -5,8 +5,7 @@ import { TrendingUp, DollarSign, FileText, Loader2 } from 'lucide-react';
 import Card from '@/components/common/Card';
 import Avatar from '@/components/common/Avatar';
 import { formatCurrency } from '@/utils/helpers';
-import Footer from '@/components/layout/Footer';
-import { Header } from '@/components/layout';
+import Layout from '@/components/layout/Layout';
 
 export default function DashboardPage() {
   const { user } = useAuthStore();
@@ -14,18 +13,23 @@ export default function DashboardPage() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <Loader2 className="w-8 h-8 text-primary-500 animate-spin" />
-      </div>
+      <Layout>
+        <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+          <Loader2 className="w-8 h-8 text-primary-500 animate-spin" />
+        </div>
+      </Layout>
     );
   }
 
-  const userData = profile || user;
+
+  const userData = profile?.data?.user || user;
   const firstName = userData?.fullName?.split(' ')[0] || 'User';
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <div className="container mx-auto px-4 py-8">
+    <Layout>
+      <div className="min-h-screen bg-gray-50">
+        <div className="container mx-auto px-4 py-8">
+        {/* Welcome Header */}
         <div className="mb-8">
           <div className="flex items-center gap-4 mb-4">
             <Avatar
@@ -134,5 +138,6 @@ export default function DashboardPage() {
         </div>
       </div>
     </div>
+    </Layout>
   );
 }

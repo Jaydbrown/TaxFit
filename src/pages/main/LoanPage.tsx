@@ -97,11 +97,11 @@ export default function LoansPage() {
   const getStatusBadge = (status: string) => {
     switch (status) {
       case 'approved':
-        return <Badge variant="success" leftIcon={<CheckCircle className="w-4 h-4" />}>Approved</Badge>;
+        return <Badge variant="success"><CheckCircle className="w-4 h-4" />Approved</Badge>;
       case 'pending':
-        return <Badge variant="warning" leftIcon={<Clock className="w-4 h-4" />}>Pending</Badge>;
+        return <Badge variant="warning"><Clock className="w-4 h-4" />Pending</Badge>;
       case 'rejected':
-        return <Badge variant="danger" leftIcon={<XCircle className="w-4 h-4" />}>Rejected</Badge>;
+        return <Badge variant="danger"><XCircle className="w-4 h-4" />Rejected</Badge>;
       case 'disbursed':
         return <Badge variant="info">Disbursed</Badge>;
       default:
@@ -115,7 +115,6 @@ export default function LoansPage() {
   return (
     <div className="min-h-screen bg-gray-50">
       <div className="container mx-auto px-4 py-8">
-        {/* Header */}
         <Layout/>
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
           <div>

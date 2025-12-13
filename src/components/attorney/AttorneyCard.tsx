@@ -1,113 +1,187 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
-import { MapPin, Star, Briefcase, DollarSign } from 'lucide-react';
-import { Attorney } from '@/types';
-import Badge from '@/components/common/Badge';
-import Avatar from '@/components/common/Avatar';
-import { formatCurrency } from '@/utils/helpers';
+import { useNavigate } from 'react-router-dom';
+import { MapPin, Star, Briefcase, TrendingUp, ArrowRight, Award } from 'lucide-react';
+import { useAuthStore } from '@/store/auth-store';
 
 interface AttorneyCardProps {
-  attorney: Attorney;
+  attorney: {
+    id: string;
+    fullName: string;
+    firmName: string;
+    location: string;
+    state: string;
+    yearsOfExperience: number;
+    hourlyRate: number;
+    rating: number;
+    reviewCount: number;
+    specializations: string[];
+    bio: string;
+    successRate: number;
+    casesHandled: number;
+    avatarUrl: string | null;
+  };
 }
 
 export default function AttorneyCard({ attorney }: AttorneyCardProps) {
-  const { attorney: profile } = attorney;
+  const navigate = useNavigate();
+  const { isAuthenticated } = useAuthStore();
+
+  const handleCardClick = () => {
+    navigate(`/attorney/${attorney.id}`);
+  };
+
+  const handleHireClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (isAuthenticated) {
+      navigate(`/attorney/${attorney.id}/hire`);
+    } else {
+      navigate(`/login?redirect=/attorney/${attorney.id}`);
+    }
+  };
+
+  // Get initials for avatar
+  const initials = attorney.fullName
+    .split(' ')
+    .map(n => n[0])
+    .join('')
+    .toUpperCase()
+    .slice(0, 2);
 
   return (
-    <Link
-      to={`/find-attorney/${attorney.id}`}
-      className="block bg-white rounded-lg border border-gray-200 shadow-sm hover:shadow-md transition-all duration-200 overflow-hidden group"
+    <div 
+      onClick={handleCardClick}
+      className="group bg-white border border-gray-200 hover:border-gray-300 transition-all duration-300 cursor-pointer"
     >
-      <div className="p-6">
-        <div className="flex items-start gap-4 mb-4">
-          <Avatar
-            src={attorney.avatarUrl}
-            name={attorney.fullName}
-            size="lg"
-          />
-          
+      {/* Main Content */}
+      <div className="p-8 md:p-12">
+        {/* Header */}
+        <div className="flex items-start gap-6 mb-8 pb-8 border-b border-gray-100">
+          {/* Avatar */}
+          <div className="flex-shrink-0">
+            <div className="w-20 h-20 bg-gradient-to-br from-primary-500 to-primary-600 flex items-center justify-center">
+              <span className="text-2xl font-light text-white">{initials}</span>
+            </div>
+          </div>
+
+          {/* Info */}
           <div className="flex-1 min-w-0">
-            <h3 className="text-lg font-semibold text-gray-900 group-hover:text-primary-600 transition-colors truncate">
+            <h3 className="text-2xl md:text-3xl font-light text-gray-900 mb-2 group-hover:text-primary-600 transition-colors">
               {attorney.fullName}
             </h3>
-            <p className="text-sm text-gray-600 truncate">{profile.firmName}</p>
+            <div className="text-sm text-primary-600 font-light mb-4">
+              {attorney.firmName}
+            </div>
             
-            {profile.rating && (
-              <div className="flex items-center gap-2 mt-2">
-                <div className="flex items-center text-yellow-500">
-                  <Star className="w-4 h-4 fill-current" />
-                  <span className="ml-1 text-sm font-medium text-gray-900">
-                    {profile.rating.toFixed(1)}
-                  </span>
-                </div>
-                {profile.totalCases && (
-                  <span className="text-sm text-gray-500">
-                    ({profile.totalCases} cases)
-                  </span>
-                )}
+            {/* Quick Stats */}
+            <div className="flex flex-wrap items-center gap-4 text-sm text-gray-600">
+              <div className="flex items-center gap-1.5">
+                <Star className="w-4 h-4 text-yellow-500 fill-yellow-500" />
+                <span className="font-medium text-gray-900">{attorney.rating}</span>
+                <span className="text-gray-500">({attorney.reviewCount})</span>
               </div>
-            )}
+              <div className="flex items-center gap-1.5">
+                <MapPin className="w-4 h-4" />
+                <span>{attorney.location}</span>
+              </div>
+              <div className="flex items-center gap-1.5">
+                <Briefcase className="w-4 h-4" />
+                <span>{attorney.yearsOfExperience} years</span>
+              </div>
+            </div>
           </div>
         </div>
 
-        {profile.specializations && profile.specializations.length > 0 && (
-          <div className="flex flex-wrap gap-2 mb-4">
-            {profile.specializations.slice(0, 3).map((spec, index) => (
-              <Badge key={index} variant="primary" size="sm">
+        {/* Specializations */}
+        <div className="mb-8">
+          <div className="text-xs uppercase tracking-wider text-gray-500 font-light mb-4">
+            Specializations
+          </div>
+          <div className="flex flex-wrap gap-2">
+            {attorney.specializations.slice(0, 4).map((spec, index) => (
+              <span
+                key={index}
+                className="px-3 py-1.5 bg-gray-50 border border-gray-200 text-sm text-gray-700 font-light hover:border-gray-300 transition-colors"
+              >
                 {spec}
-              </Badge>
+              </span>
             ))}
-            {profile.specializations.length > 3 && (
-              <Badge variant="neutral" size="sm">
-                +{profile.specializations.length - 3} more
-              </Badge>
+            {attorney.specializations.length > 4 && (
+              <span className="px-3 py-1.5 bg-gray-100 text-sm text-gray-600 font-light">
+                +{attorney.specializations.length - 4} more
+              </span>
             )}
-          </div>
-        )}
-
-        <div className="grid grid-cols-2 gap-3 mb-4">
-          <div className="flex items-center text-sm text-gray-600">
-            <Briefcase className="w-4 h-4 mr-1.5 flex-shrink-0" />
-            <span>{profile.yearsOfExperience} years exp.</span>
-          </div>
-          
-          <div className="flex items-center text-sm text-gray-600">
-            <MapPin className="w-4 h-4 mr-1.5 flex-shrink-0" />
-            <span className="truncate">License: {profile.professionalLicenseNumber}</span>
           </div>
         </div>
 
+        {/* Bio */}
+        <p className="text-base text-gray-600 font-light leading-relaxed mb-8 line-clamp-3">
+          {attorney.bio}
+        </p>
 
-        {profile.bio && (
-          <p className="text-sm text-gray-600 line-clamp-2 mb-4">
-            {profile.bio}
-          </p>
-        )}
-
-
-        <div className="flex items-center justify-between pt-4 border-t border-gray-100">
-          {profile.hourlyRate ? (
-            <div className="flex items-center text-gray-900">
-              <DollarSign className="w-4 h-4" />
-              <span className="font-semibold">
-                {formatCurrency(profile.hourlyRate)}/hr
+        {/* Performance Metrics */}
+        <div className="grid grid-cols-2 gap-6 mb-8 pb-8 border-b border-gray-100">
+          <div>
+            <div className="flex items-center gap-2 mb-2">
+              <TrendingUp className="w-4 h-4 text-green-600" />
+              <span className="text-xs uppercase tracking-wider text-gray-500 font-light">
+                Success Rate
               </span>
             </div>
-          ) : (
-            <span className="text-sm text-gray-500">Rate not specified</span>
-          )}
-          
-          <button
-            onClick={(e) => {
-              e.preventDefault();
+            <div className="text-3xl font-light text-gray-900">
+              {attorney.successRate}%
+            </div>
+          </div>
+          <div>
+            <div className="flex items-center gap-2 mb-2">
+              <Award className="w-4 h-4 text-primary-600" />
+              <span className="text-xs uppercase tracking-wider text-gray-500 font-light">
+                Cases Handled
+              </span>
+            </div>
+            <div className="text-3xl font-light text-gray-900">
+              {attorney.casesHandled}+
+            </div>
+          </div>
+        </div>
 
-            }}
-            className="px-4 py-2 bg-primary-500 hover:bg-primary-600 text-white text-sm font-medium rounded-lg transition-colors"
+        {/* Footer */}
+        <div className="flex items-center justify-between gap-6">
+          {/* Rate */}
+          <div>
+            <div className="text-xs uppercase tracking-wider text-gray-500 font-light mb-1">
+              Hourly Rate
+            </div>
+            <div className="text-2xl font-light text-gray-900">
+              ₦{attorney.hourlyRate.toLocaleString()}
+              <span className="text-sm text-gray-500 font-light">/hr</span>
+            </div>
+          </div>
+
+          {/* CTA */}
+          <button
+            onClick={handleHireClick}
+            className="flex-shrink-0 group/btn px-6 py-3 bg-secondary-900 hover:bg-secondary-800 text-white transition-colors"
           >
-            Book Consultation
+            <span className="flex items-center gap-2 text-sm">
+              <span>{isAuthenticated ? 'Hire' : 'Sign in to Hire'}</span>
+              <ArrowRight className="w-4 h-4 group-hover/btn:translate-x-1 transition-transform" />
+            </span>
           </button>
         </div>
+
+        {/* Login Notice for Guests */}
+        {!isAuthenticated && (
+          <div className="mt-4 pt-4 border-t border-gray-100">
+            <div className="flex items-start gap-3 p-3 bg-blue-50 border-l-2 border-blue-500">
+              <div className="flex-1">
+                <div className="text-xs text-blue-900 font-light">
+                  Sign in required to hire or contact this attorney
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
-    </Link>
+    </div>
   );
 }
