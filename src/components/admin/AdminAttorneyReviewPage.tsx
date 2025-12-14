@@ -1,17 +1,15 @@
-
 // src/pages/admin/AdminAttorneyReviewPage.tsx
 
 import React from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { toast } from 'react-hot-toast';
-import { UserCheck, Clock, CheckCircle, XCircle, FileText, Briefcase, DollarSign, Loader2 } from 'lucide-react';
+import { Clock, CheckCircle, XCircle, FileText, Briefcase, DollarSign, Loader2, ArrowRight, MapPin } from 'lucide-react';
 
 import Layout from '@/components/layout/Layout';
 import Card from '@/components/common/Card';
 import Button from '@/components/common/Button';
 import Textarea from '@/components/common/Textarea';
-import Input from '@/components/common/Input';
 import Avatar from '@/components/common/Avatar';
 import { useAdminAttorneyDetails, useReviewVerification } from '@/hooks/attorney/use-verification';
 import { format } from 'date-fns';
@@ -30,9 +28,9 @@ const AdminAttorneyReviewPage: React.FC = () => {
     const navigate = useNavigate();
 
     const { data: attorney, isLoading, isError } = useAdminAttorneyDetails(attorneyId || '');
-    const { mutate: reviewVerification, isLoading: isReviewing } = useReviewVerification();
+    const { mutate: reviewVerification, isPending: isReviewing } = useReviewVerification(); // FIX: isPending
 
-    const { register, handleSubmit, watch, setValue, formState: { errors } } = useForm<ReviewFormInput>({
+    const { register, handleSubmit, watch, formState: { errors } } = useForm<ReviewFormInput>({
         defaultValues: {
             status: 'approved',
             adminNotes: '',
@@ -97,8 +95,7 @@ const AdminAttorneyReviewPage: React.FC = () => {
     
     // Placeholder for document verification
     const handleDocumentVerify = (docId: string, currentStatus: boolean) => {
-        // Here you would implement the PUT /api/v1/admin/attorneys/{attorneyId}/verification/documents/{documentId}/verify logic
-        toast.info(`Toggling document ${docId} verification status.`);
+        toast('Document upload feature needs implementation.', { icon: 'ℹ️' });
     };
 
     return (
@@ -112,12 +109,12 @@ const AdminAttorneyReviewPage: React.FC = () => {
                 </header>
 
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                    {/* Column 1 & 2: Profile Details and Documents */}
                     <div className="lg:col-span-2 space-y-8">
                         <Card className="p-8">
                             <div className="flex justify-between items-start mb-6 pb-6 border-b border-gray-100">
                                 <div className="flex items-center gap-4">
-                                    <Avatar src={user.avatarUrl} name={user.fullName} size="xl" />
+                                    {/* FIX: Coerce null to undefined */}
+                                    <Avatar src={user.avatarUrl || undefined} name={user.fullName} size="xl" /> 
                                     <div>
                                         <h2 className="text-2xl font-semibold text-gray-900">{user.fullName}</h2>
                                         <p className="text-sm text-gray-500">{profile.firmName}</p>
@@ -155,11 +152,10 @@ const AdminAttorneyReviewPage: React.FC = () => {
                         <Card className="p-8">
                             <h3 className="text-xl font-semibold mb-6 flex items-center gap-2"><FileText className="w-5 h-5" /> Verification Documents</h3>
                             
-                            {/* Placeholder for fetching and listing documents */}
                             <div className="space-y-4">
                                 {profile.professionalDocuments && profile.professionalDocuments.length > 0 ? (
-                                    profile.professionalDocuments.map((doc: any) => ( // Replace 'any' with actual document interface
-                                        <div key={doc.documentUrl} className="flex justify-between items-center p-3 border rounded-lg hover:bg-gray-50">
+                                    profile.professionalDocuments.map((doc: any, index: number) => (
+                                        <div key={index} className="flex justify-between items-center p-3 border rounded-lg hover:bg-gray-50">
                                             <div className="text-sm">
                                                 <p className="font-medium capitalize">{doc.documentType.replace('_', ' ')}</p>
                                                 <p className="text-xs text-gray-500">Uploaded: {format(new Date(doc.uploadedAt), 'PP')}</p>
@@ -192,23 +188,21 @@ const AdminAttorneyReviewPage: React.FC = () => {
                             <div className="space-y-3">
                                 <label className="block text-sm font-medium text-gray-700">Set Verification Status</label>
                                 <div className="flex gap-4">
-                                    <label className="flex items-center gap-2 border p-3 rounded-lg flex-1 cursor-pointer transition-colors has-checked:bg-green-50">
+                                    <label className={`flex items-center gap-2 border p-3 rounded-lg flex-1 cursor-pointer transition-colors ${watchStatus === 'approved' ? 'border-green-500 bg-green-50' : 'border-gray-300 hover:bg-gray-50'}`}>
                                         <input 
                                             type="radio" 
                                             value="approved" 
                                             {...register('status')} 
-                                            checked={watchStatus === 'approved'}
-                                            className="form-radio text-green-600"
+                                            className="form-radio text-green-600 focus:ring-green-500"
                                         />
                                         <span className="text-sm font-medium text-green-700">Approve</span>
                                     </label>
-                                    <label className="flex items-center gap-2 border p-3 rounded-lg flex-1 cursor-pointer transition-colors has-checked:bg-red-50">
+                                    <label className={`flex items-center gap-2 border p-3 rounded-lg flex-1 cursor-pointer transition-colors ${watchStatus === 'rejected' ? 'border-red-500 bg-red-50' : 'border-gray-300 hover:bg-gray-50'}`}>
                                         <input 
                                             type="radio" 
                                             value="rejected" 
                                             {...register('status')} 
-                                            checked={watchStatus === 'rejected'}
-                                            className="form-radio text-red-600"
+                                            className="form-radio text-red-600 focus:ring-red-500"
                                         />
                                         <span className="text-sm font-medium text-red-700">Reject</span>
                                     </label>

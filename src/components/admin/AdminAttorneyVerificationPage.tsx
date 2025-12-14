@@ -1,5 +1,3 @@
-// src/pages/admin/AdminAttorneyVerificationPage.tsx
-
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Filter, Search, UserCheck, Clock, CheckCircle, XCircle, Loader2 } from 'lucide-react';
@@ -43,7 +41,6 @@ const AdminAttorneyVerificationPage: React.FC = () => {
     const sortByWatch = watch('sortBy');
     const sortOrderWatch = watch('sortOrder');
 
-    // Fetch data using the Admin hook
     const { data, isLoading, isFetching } = useAdminVerificationList({
         page,
         limit: 10,
@@ -60,11 +57,10 @@ const AdminAttorneyVerificationPage: React.FC = () => {
             sortOrder: data.sortOrder,
             search: data.search,
         });
-        setPage(1); // Reset to page 1 on new filter/search
+        setPage(1);
     };
 
     React.useEffect(() => {
-        // Automatically submit filters when dropdowns change
         const submitForm = handleSubmit(handleFilterSubmit);
         submitForm();
     }, [statusWatch, sortByWatch, sortOrderWatch]); 

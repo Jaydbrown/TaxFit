@@ -32,12 +32,28 @@ export interface AttorneyProfile {
   hourlyRate: number;
   specializations?: string[];
   professionalLicenseNumber?: string;
+  verificationStatus?: 'draft' | 'pending' | 'approved' | 'rejected';
   bio?: string;
   location?: string;
   state?: string;
   rating?: number;
   totalCases?: number;
   successRate?: number;
+  submittedForVerificationAt?: string;
+  rejectionReason?: string;
+  rejectionDetails?: string;
+  professionalDocuments?: any[];
+  education?: {
+        institution: string;
+        degree: string;
+        year: number;
+    }[];
+
+    certifications?: {
+        name: string;
+        issuer: string;
+        year: number;
+    }[];
 }
 
 export interface IndividualProfile {
@@ -84,7 +100,6 @@ export interface AuthResponse {
 export interface LoginResponse {
   success: boolean;
   message?: string;
-  // Login response guarantees a token
   data: Omit<AuthResponseData, 'token'> & { token: string }; 
 }
 
@@ -140,20 +155,23 @@ export interface ProfileUpdateInput {
   hourlyRate?: number;
   bio?: string;
   specializations?: string[];
+  education?: {
+        institution: string;
+        degree: string;
+        year: number;
+    }[];
+
+    certifications?: {
+        name: string;
+        issuer: string;
+        year: number;
+    }[];
 }
 
-
-// --- Attorney Search Types ---
-
-/**
- * Defines the combined data structure expected for a single attorney search result item.
- * It combines the User base data with the nested AttorneyProfile.
- */
 export interface AttorneySearchResultItem extends User {
   attorneyProfile: AttorneyProfile; 
 }
 
-// Defines Attorney alias to point to the non-conflicting structure used in search results.
 export type Attorney = AttorneySearchResultItem;
 
 

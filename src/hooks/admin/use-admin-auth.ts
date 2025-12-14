@@ -4,23 +4,16 @@ import { useMutation } from '@tanstack/react-query';
 import apiClient from '@/lib/api-client'; 
 import { toast } from 'react-hot-toast';
 import { handleApiError } from '@/lib/api-client';
+import { useAdminAuthStore, AdminUser } from '@/store/use-admin-auth-store'; // Import types and store
 
-// FIX: Import the new Admin Store
-import { useAdminAuthStore } from '@/store/use-admin-auth-store';
-
-import type { 
-    AuthResponse, 
-    LoginInput, 
-    RegisterInput,
-    AdminUser 
-} from '@/types'; // Ensure AdminUser is accessible here
+// Assuming these base types exist in your system
+import type { AuthResponse, LoginInput, RegisterInput } from '@/types'; 
 
 
 /**
  * Hook for Admin Login using POST /api/v1/auth/loginadmin
  */
 export function useAdminLogin() {
-    // FIX: Destructure session setters from the Admin Store
     const { setAdminTokens, setAdminUser } = useAdminAuthStore(); 
     
     return useMutation<AuthResponse, unknown, LoginInput>({
@@ -29,25 +22,21 @@ export function useAdminLogin() {
             return response.data;
         },
         onSuccess: (data) => {
-            // FIX: Set Admin session state
+            const adminUserData = data.data.user as unknown as AdminUser;
+
             setAdminTokens(data.data.tokens || null);
-            setAdminUser(data.data.user as AdminUser); // Cast to AdminUser type
+            setAdminUser(adminUserData);
             
             toast.success('Admin login successful!');
-            // Redirect logic would be handled in the component
         },
         onError: (error) => {
-            toast.error(handleApiError(error));
+            toast.error(handleApiError(error) ?? 'Admin login failed.');
         },
     });
 }
 
-/**
- * Hook for Admin Registration using POST /api/v1/auth/registeradmin
- */
+
 export function useAdminRegister() {
-    // Note: Registration doesn't usually set the session immediately
-    
     return useMutation<AuthResponse, unknown, RegisterInput>({
         mutationFn: async (data) => {
             const response = await apiClient.post<AuthResponse>('/auth/registeradmin', data);
@@ -55,10 +44,9 @@ export function useAdminRegister() {
         },
         onSuccess: (data) => {
             toast.success(data.message || 'Admin registration successful!');
-            // Redirect to login or verification page
         },
         onError: (error) => {
-            toast.error(handleApiError(error));
+            toast.error(handleApiError(error) ?? 'Admin registration failed.');
         },
     });
 }

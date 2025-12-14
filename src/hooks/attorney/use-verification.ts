@@ -1,125 +1,55 @@
-// src/hooks/attorney/use-verification.ts
+
 
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import apiClient from '@/lib/api-client'; 
+import apiClient from '@/lib/api-client';
 import { toast } from 'react-hot-toast';
-// Import types from the finalized file
-import type { 
-    Attorney, 
-    AuthResponse, 
-    AttorneySearchFilters, 
-    AttorneySearchResult, 
-    AttorneyProfile, 
-    User,
-} from '@/types';
-// Assuming the handleApiError helper is imported or defined
-import { handleApiError } from '@/lib/api-client';
+import { handleApiError } from '@/lib/api-client'; 
 
+import type { Attorney, AttorneySearchFilters, AuthResponse } from '@/types'; 
 
-// --- Shared Response Types ---
-
-interface AttorneyDetailsResponse {
-    success: boolean;
-    data: Attorney; // Attorney is the combined User + AttorneyProfile type
-}
-
-interface VerificationStatusResponse {
-    success: boolean;
-    data: {
-        isProfileComplete: boolean;
-        isVerifiedAttorney: boolean;
-        verificationStatus: 'pending' | 'approved' | 'rejected' | 'draft';
-        submittedForVerificationAt?: string;
-        missingRequirements: string[];
-        rejectionReason?: string;
-        rejectionDetails?: string;
-    };
-}
-
-interface DocumentUploadInput {
-    documentType: string;
-    documentUrl: string;
-}
-
-// --- 1. ATTORNEY (User-Side) HOOKS ---
-
-// Submission payload structure based on Swagger
-interface SubmitVerificationInput extends Partial<AttorneyProfile> {
+interface SubmitVerificationInput {
     hourlyRate: number;
     consultationFee: number;
     minConsultationDuration: number;
     maxConsultationDuration: number;
     specializations: string[];
     bio: string;
-    // ... add education/certifications fields if needed
 }
 
-/**
- * Hook to submit the attorney profile details for admin review.
- */
-export function useSubmitVerification() {
-    const queryClient = useQueryClient();
-    
-    return useMutation<AuthResponse, unknown, SubmitVerificationInput>({
-        mutationFn: async (data) => {
-            const response = await apiClient.post<AuthResponse>('/attorney/submit-verification', data);
-            return response.data;
-        },
-        onSuccess: (data) => {
-            toast.success(data.message || 'Profile submitted for verification successfully!');
-            // Invalidate the status query to reflect the 'pending' state immediately
-            queryClient.invalidateQueries({ queryKey: ['attorneyVerificationStatus'] });
-            queryClient.invalidateQueries({ queryKey: ['profile'] });
-        },
-        onError: (error) => {
-            toast.error(handleApiError(error));
-        },
-    });
+interface VerificationStatusResponse {
+    success: boolean;
+    data: {
+        verificationStatus: 'draft' | 'pending' | 'approved' | 'rejected';
+        submittedForVerificationAt?: string;
+        rejectionReason?: string;
+        rejectionDetails?: string;
+        missingRequirements?: string[]; 
+    };
 }
-
-/**
- * Hook to check the current attorney verification status.
- */
-export function useVerificationStatus() {
-    return useQuery<VerificationStatusResponse['data'], unknown>({
-        queryKey: ['attorneyVerificationStatus'],
-        queryFn: async () => {
-            const response = await apiClient.get<VerificationStatusResponse>('/attorney/verification-status');
-            return response.data.data;
-        },
-        staleTime: 5 * 60 * 1000,
-    });
-}
-
-/**
- * Hook to upload professional documents required for verification.
- */
-export function useUploadDocument() {
-    const queryClient = useQueryClient();
-
-    return useMutation<AuthResponse, unknown, DocumentUploadInput>({
-        mutationFn: async (data) => {
-            const response = await apiClient.post<AuthResponse>('/attorney/upload-document', data);
-            return response.data;
-        },
-        onSuccess: (data) => {
-            toast.success(data.message || 'Document uploaded successfully!');
-            // Invalidate status to check if requirements are now met
-            queryClient.invalidateQueries({ queryKey: ['attorneyVerificationStatus'] });
-        },
-        onError: (error) => {
-            toast.error(handleApiError(error));
-        },
-    });
-}
-
 
 interface AdminVerificationListResponse {
     success: boolean;
-    data: AttorneySearchResult & { totalPages: number };
+    data: {
+        attorneys: Attorney[];
+        total: number;
+        totalPages: number;
+        page: number;
+    };
 }
 
-export function useAdminVerificationList(filters: AttorneySearchFilters & { page: number; limit: number; status: string; sortBy: string; sortOrder: string; }) {
+interface AdminReviewInput {
+    status: 'approved' | 'rejected';
+    adminNotes?: string;
+    rejectionReason?: string;
+    rejectionDetails?: string;
+}
+
+interface AttorneyDetailsResponse {
+    success: boolean;
+    data: Attorney;
+}
+
+export function useAdminVerificationList(filters: AttorneySearchFilters & { page: number; limit: number; status?: string; sortBy?: string; sortOrder?: string; search?: string; }) {
     
     return useQuery<AdminVerificationListResponse['data'], unknown>({
         queryKey: ['adminVerificationList', filters],
@@ -129,34 +59,100 @@ export function useAdminVerificationList(filters: AttorneySearchFilters & { page
             });
             return response.data.data;
         },
-        staleTime: 60 * 1000,
+        staleTime: 60 * 1000, 
     });
 }
 
-
-interface AdminReviewInput {
-    status: 'approved' | 'rejected';
-    adminNotes?: string;
-    rejectionReason?: string;
-    rejectionDetails?: string;
+export function useSubmitVerification() {
+    const queryClient = useQueryClient();
+    
+    return useMutation<AuthResponse, unknown, SubmitVerificationInput>({
+        mutationFn: async (data) => {
+            const response = await apiClient.post<AuthResponse>('/attorney/submit-verification', data);
+            return response.data;
+        },
+        onSuccess: () => {
+            // Invalidate status so the component fetches the new 'pending' status
+            queryClient.invalidateQueries({ queryKey: ['attorneyVerificationStatus'] });
+            toast.success('Verification request submitted!');
+        },
+        onError: (error) => {
+            toast.error(handleApiError(error) ?? 'Verification submission failed.');
+        },
+    });
 }
 
-export function useReviewVerification(attorneyId: string) {
+export function useUploadDocument() {
+    const queryClient = useQueryClient();
+    
+    // NOTE: Mutation payload type depends on how you handle File objects/FormData
+    return useMutation<AuthResponse, unknown, FormData>({
+        mutationFn: async (formData) => {
+            const response = await apiClient.post<AuthResponse>('/attorney/upload-document', formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                },
+            });
+            return response.data;
+        },
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['attorneyVerificationStatus'] });
+            toast.success('Document uploaded successfully!');
+        },
+        onError: (error) => {
+            toast.error(handleApiError(error) ?? 'Document upload failed.');
+        },
+    });
+}
+
+export function useAdminAttorneyDetails(attorneyId: string) {
+    const isEnabled = !!attorneyId;
+    
+    return useQuery<AttorneyDetailsResponse['data'], unknown>({
+        queryKey: ['attorneyDetails', attorneyId],
+        queryFn: async () => {
+            const response = await apiClient.get<AttorneyDetailsResponse>(`/admin/attorneys/${attorneyId}/verification`);
+            return response.data.data;
+        },
+        enabled: isEnabled,
+        staleTime: 5 * 60 * 1000, 
+    });
+}
+
+export function useReviewVerification() {
     const queryClient = useQueryClient();
 
-    return useMutation<AuthResponse, unknown, AdminReviewInput>({
-        mutationFn: async (data) => {
+    return useMutation<AuthResponse, unknown, { attorneyId: string, data: AdminReviewInput }>({
+        mutationFn: async ({ attorneyId, data }) => {
             const response = await apiClient.put<AuthResponse>(`/admin/attorneys/${attorneyId}/verification/review`, data);
             return response.data;
         },
-        onSuccess: (data) => {
+        onSuccess: (data, variables) => {
             toast.success(data.message || 'Verification status updated successfully!');
-            // Invalidate the list and the specific attorney's details
             queryClient.invalidateQueries({ queryKey: ['adminVerificationList'] });
-            queryClient.invalidateQueries({ queryKey: ['attorneyDetails', attorneyId] });
+            queryClient.invalidateQueries({ queryKey: ['attorneyDetails', variables.attorneyId] });
         },
         onError: (error) => {
-            toast.error(handleApiError(error));
+            toast.error(handleApiError(error) ?? 'Failed to process review.');
         },
+    });
+}
+
+export function useVerificationStatus() {
+    return useQuery<VerificationStatusResponse['data'], unknown>({
+        queryKey: ['attorneyVerificationStatus'],
+        queryFn: async () => {
+            const response = await apiClient.get<VerificationStatusResponse>('/attorney/verification-status');
+            return response.data.data;
+        },
+        // We typically refetch frequently on a status page
+        staleTime: 30 * 1000, // 30 seconds
+        // onError: (error) => {
+        //     // Error here might mean the user isn't an attorney or a server error
+        //     console.error("Failed to fetch verification status:", error);
+        //     // This toast is often suppressed on the status page itself, 
+        //     // but included here for hook integrity.
+        //     // toast.error(handleApiError(error) ?? "Could not retrieve verification status.");
+        // }
     });
 }

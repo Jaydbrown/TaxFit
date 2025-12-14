@@ -1,9 +1,7 @@
-// src/pages/attorney/AttorneyVerificationStatusPage.tsx
-
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useVerificationStatus } from '@/hooks/attorney/use-verification';
-import { Loader2, Clock, CheckCircle, XCircle, FileText } from 'lucide-react';
+import { Loader2, Clock, CheckCircle, XCircle, FileText, ArrowRight } from 'lucide-react';
 
 import Layout from '@/components/layout/Layout';
 import Card from '@/components/common/Card';

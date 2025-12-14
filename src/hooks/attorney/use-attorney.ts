@@ -1,5 +1,3 @@
-// src/hooks/attorney/use-attorney.ts
-
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import apiClient from '@/lib/api-client';
 import { toast } from 'react-hot-toast';
@@ -8,7 +6,7 @@ import { useAuthStore } from '@/store/auth-store';
 
 import type { 
     AuthResponse, 
-    ProfileUpdateInput, 
+    ProfileUpdateInput, // This type must now include education/certifications arrays
     Attorney,
     User
 } from '@/types'; 
@@ -38,7 +36,11 @@ export function useUpdateProfile() {
             bio: data.bio,
             hourlyRate: data.hourlyRate,
             specializations: data.specializations,
-            // ... other attorney-specific fields
+            
+            // --- FIX: ADDED NEW COMPLEX FIELDS ---
+            education: data.education, 
+            certifications: data.certifications,
+            // ------------------------------------
         });
 
     return useMutation<AuthResponse, unknown, ProfileUpdateInput>({
@@ -52,7 +54,7 @@ export function useUpdateProfile() {
             // 2. Update Attorney-Specific Fields if applicable
             if (isAttorney) {
                 // Ensure attorney-specific data is present before calling the attorney endpoint
-                if (data.firmName || data.bio || data.hourlyRate) {
+                if (data.firmName || data.bio || data.hourlyRate || data.education || data.certifications) {
                     const attorneyRes = await updateAttorneyProfile(data);
                     message = attorneyRes.data.message || 'Profile and Attorney details updated successfully.';
                 }
@@ -61,12 +63,11 @@ export function useUpdateProfile() {
             return { success: true, message: message, data: generalRes.data.data }; // Return structured response
         },
         onSuccess: (data) => {
-            toast.success(data.message);
-            // Invalidate the profile query to fetch and update the global state
+            toast.success(data.message ?? 'Profile updated successfully.');
             queryClient.invalidateQueries({ queryKey: ['profile'] });
         },
         onError: (error) => {
-            toast.error(handleApiError(error));
+            toast.error(handleApiError(error) ?? 'Failed to update user profile.');
         },
     });
 }
@@ -78,7 +79,7 @@ export function useAttorneyDetails(attorneyId: string) {
     return useQuery<AttorneyDetailsResponse['data'], unknown>({
         queryKey: ['attorneyDetails', attorneyId],
         queryFn: async () => {
-            const response = await apiClient.get<AttorneyDetailsResponse>(`/api/v1/admin/attorneys/${attorneyId}/verification`);
+            const response = await apiClient.get<AttorneyDetailsResponse>(`/api/v1/attorney/profile/${attorneyId}`); 
             return response.data.data;
         },
         enabled: isEnabled,
@@ -100,7 +101,7 @@ export function useToggleAvailability() {
             queryClient.invalidateQueries({ queryKey: ['profile'] }); 
         },
         onError: (error) => {
-            toast.error(handleApiError(error));
+            toast.error(handleApiError(error) ?? 'Failed to toggle availability status.');
         },
     });
 }
