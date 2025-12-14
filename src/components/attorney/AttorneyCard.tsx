@@ -1,30 +1,46 @@
+// src/components/attorney/AttorneyCard.tsx
+
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { MapPin, Star, Briefcase, TrendingUp, ArrowRight, Award } from 'lucide-react';
 import { useAuthStore } from '@/store/auth-store';
 
+// Assuming you import these common components elsewhere
+import Avatar from '@/components/common/Avatar'; 
+import { formatCurrency } from '@/utils/helpers'; // Assuming this exists
+
+// --- Type Definition Alignment ---
+// This interface now uses the standard combined type (Attorney)
+// and maps the AttorneyProfile data onto the card structure.
 interface AttorneyCardProps {
   attorney: {
-    id: string;
+    id: string; // User ID
     fullName: string;
-    firmName: string;
-    location: string;
-    state: string;
-    yearsOfExperience: number;
-    hourlyRate: number;
-    rating: number;
-    reviewCount: number;
-    specializations: string[];
-    bio: string;
-    successRate: number;
-    casesHandled: number;
     avatarUrl: string | null;
+    
+    // AttorneyProfile fields (nested in the Attorney type)
+    attorneyProfile: {
+        firmName: string;
+        location?: string; // Optional/fallback
+        state?: string; // Optional/fallback
+        yearsOfExperience: number;
+        hourlyRate: number;
+        rating?: number;
+        totalReviews?: number; // Used reviewCount here
+        specializations?: string[];
+        bio?: string;
+        successRate?: number; // Used successRate here
+        totalCases?: number; // Used casesHandled here
+    }
   };
 }
 
 export default function AttorneyCard({ attorney }: AttorneyCardProps) {
   const navigate = useNavigate();
   const { isAuthenticated } = useAuthStore();
+  
+  // Use the nested profile data for display
+  const profile = attorney.attorneyProfile;
 
   const handleCardClick = () => {
     navigate(`/attorney/${attorney.id}`);
@@ -39,28 +55,29 @@ export default function AttorneyCard({ attorney }: AttorneyCardProps) {
     }
   };
 
-  // Get initials for avatar
-  const initials = attorney.fullName
-    .split(' ')
-    .map(n => n[0])
-    .join('')
-    .toUpperCase()
-    .slice(0, 2);
+  // Safe access to potentially optional data
+  const ratingValue = profile.rating?.toFixed(1) || 'N/A';
+  const reviewCount = profile.totalReviews || 0;
+  const locationText = profile.location || profile.state || 'Nigeria';
+  const specializations = profile.specializations || [];
 
   return (
     <div 
       onClick={handleCardClick}
-      className="group bg-white border border-gray-200 hover:border-gray-300 transition-all duration-300 cursor-pointer"
+      className="group bg-white border border-gray-200 hover:border-gray-300 transition-all duration-300 cursor-pointer rounded-lg shadow-sm overflow-hidden"
     >
       {/* Main Content */}
       <div className="p-8 md:p-12">
         {/* Header */}
         <div className="flex items-start gap-6 mb-8 pb-8 border-b border-gray-100">
-          {/* Avatar */}
+          {/* Avatar (Using assumed Avatar component) */}
           <div className="flex-shrink-0">
-            <div className="w-20 h-20 bg-gradient-to-br from-primary-500 to-primary-600 flex items-center justify-center">
-              <span className="text-2xl font-light text-white">{initials}</span>
-            </div>
+            <Avatar 
+                src={attorney.avatarUrl} 
+                name={attorney.fullName} 
+                size="lg" // Assuming 'lg' corresponds to w-20 h-20
+                className="w-20 h-20"
+            />
           </div>
 
           {/* Info */}
@@ -69,23 +86,23 @@ export default function AttorneyCard({ attorney }: AttorneyCardProps) {
               {attorney.fullName}
             </h3>
             <div className="text-sm text-primary-600 font-light mb-4">
-              {attorney.firmName}
+              {profile.firmName}
             </div>
             
             {/* Quick Stats */}
             <div className="flex flex-wrap items-center gap-4 text-sm text-gray-600">
               <div className="flex items-center gap-1.5">
                 <Star className="w-4 h-4 text-yellow-500 fill-yellow-500" />
-                <span className="font-medium text-gray-900">{attorney.rating}</span>
-                <span className="text-gray-500">({attorney.reviewCount})</span>
+                <span className="font-medium text-gray-900">{ratingValue}</span>
+                <span className="text-gray-500">({reviewCount})</span>
               </div>
               <div className="flex items-center gap-1.5">
                 <MapPin className="w-4 h-4" />
-                <span>{attorney.location}</span>
+                <span>{locationText}</span>
               </div>
               <div className="flex items-center gap-1.5">
                 <Briefcase className="w-4 h-4" />
-                <span>{attorney.yearsOfExperience} years</span>
+                <span>{profile.yearsOfExperience} years</span>
               </div>
             </div>
           </div>
@@ -97,17 +114,17 @@ export default function AttorneyCard({ attorney }: AttorneyCardProps) {
             Specializations
           </div>
           <div className="flex flex-wrap gap-2">
-            {attorney.specializations.slice(0, 4).map((spec, index) => (
+            {specializations.slice(0, 4).map((spec, index) => (
               <span
                 key={index}
-                className="px-3 py-1.5 bg-gray-50 border border-gray-200 text-sm text-gray-700 font-light hover:border-gray-300 transition-colors"
+                className="px-3 py-1.5 bg-gray-50 border border-gray-200 text-sm text-gray-700 font-light hover:border-gray-300 transition-colors rounded"
               >
                 {spec}
               </span>
             ))}
-            {attorney.specializations.length > 4 && (
-              <span className="px-3 py-1.5 bg-gray-100 text-sm text-gray-600 font-light">
-                +{attorney.specializations.length - 4} more
+            {specializations.length > 4 && (
+              <span className="px-3 py-1.5 bg-gray-100 text-sm text-gray-600 font-light rounded">
+                +{specializations.length - 4} more
               </span>
             )}
           </div>
@@ -115,7 +132,7 @@ export default function AttorneyCard({ attorney }: AttorneyCardProps) {
 
         {/* Bio */}
         <p className="text-base text-gray-600 font-light leading-relaxed mb-8 line-clamp-3">
-          {attorney.bio}
+          {profile.bio || "This attorney has not provided a detailed biography yet."}
         </p>
 
         {/* Performance Metrics */}
@@ -128,7 +145,7 @@ export default function AttorneyCard({ attorney }: AttorneyCardProps) {
               </span>
             </div>
             <div className="text-3xl font-light text-gray-900">
-              {attorney.successRate}%
+              {profile.successRate ? `${profile.successRate}%` : 'N/A'}
             </div>
           </div>
           <div>
@@ -139,7 +156,7 @@ export default function AttorneyCard({ attorney }: AttorneyCardProps) {
               </span>
             </div>
             <div className="text-3xl font-light text-gray-900">
-              {attorney.casesHandled}+
+              {profile.totalCases ? `${profile.totalCases}+` : 'N/A'}
             </div>
           </div>
         </div>
@@ -152,7 +169,7 @@ export default function AttorneyCard({ attorney }: AttorneyCardProps) {
               Hourly Rate
             </div>
             <div className="text-2xl font-light text-gray-900">
-              ₦{attorney.hourlyRate.toLocaleString()}
+              {formatCurrency(profile.hourlyRate)}
               <span className="text-sm text-gray-500 font-light">/hr</span>
             </div>
           </div>
@@ -160,10 +177,10 @@ export default function AttorneyCard({ attorney }: AttorneyCardProps) {
           {/* CTA */}
           <button
             onClick={handleHireClick}
-            className="flex-shrink-0 group/btn px-6 py-3 bg-secondary-900 hover:bg-secondary-800 text-white transition-colors"
+            className="flex-shrink-0 group/btn px-6 py-3 bg-secondary-900 hover:bg-secondary-800 text-white transition-colors rounded-lg"
           >
-            <span className="flex items-center gap-2 text-sm">
-              <span>{isAuthenticated ? 'Hire' : 'Sign in to Hire'}</span>
+            <span className="flex items-center gap-2 text-base">
+              <span>{isAuthenticated ? 'Hire Attorney' : 'Sign in to Hire'}</span>
               <ArrowRight className="w-4 h-4 group-hover/btn:translate-x-1 transition-transform" />
             </span>
           </button>
@@ -172,9 +189,9 @@ export default function AttorneyCard({ attorney }: AttorneyCardProps) {
         {/* Login Notice for Guests */}
         {!isAuthenticated && (
           <div className="mt-4 pt-4 border-t border-gray-100">
-            <div className="flex items-start gap-3 p-3 bg-blue-50 border-l-2 border-blue-500">
+            <div className="flex items-start gap-3 p-3 bg-blue-50 border-l-4 border-blue-500 rounded-r-lg">
               <div className="flex-1">
-                <div className="text-xs text-blue-900 font-light">
+                <div className="text-sm text-blue-900 font-light">
                   Sign in required to hire or contact this attorney
                 </div>
               </div>

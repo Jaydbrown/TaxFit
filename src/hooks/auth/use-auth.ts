@@ -24,6 +24,15 @@ interface ApiError {
   message: string;
 }
 
+// Define the shape expected by setAuth (since LoginResponse data might have tokens instead of token)
+type AuthStateData = {
+    user: User;
+    attorney?: AttorneyProfile;
+    individualProfile?: IndividualProfile;
+    businessProfile?: BusinessProfile;
+    token: string;
+};
+
 type SuccessResponse = { success: boolean; message: string };
 
 type AvatarResponse = { success: boolean; data: { url: string } };
@@ -82,7 +91,7 @@ export function useRegister() {
     },
     onSuccess: (data) => {
       if (data.success && data.data) {
-        // ✅ Handle both 'token' and 'tokens.accessToken' structures
+        // Handle both 'token' (legacy) and 'tokens.accessToken' (modern) structures
         const token = data.data.token || data.data.tokens?.accessToken;
         
         if (token) {
@@ -111,62 +120,49 @@ export function useLogin() {
   return useMutation<LoginResponse, ApiError, LoginInput>({
     mutationKey: ['login'],
     mutationFn: async (data) => {
-      console.log('📤 Login request:', data.email);
-      
       const response = await apiClient.post<LoginResponse>('/auth/login', {
         identifier: data.email,
         password: data.password,
       });
-      
-      console.log('✅ API Response:', response.data);
-      
       return response.data;
     },
     onSuccess: (data) => {
-      console.log('🎯 onSuccess triggered');
-      
-      // ✅ Check for tokens.accessToken structure
-      if (data.success && data.data && data.data.tokens?.accessToken) {
-        console.log('✅ Valid response structure');
+      const authData = data.data;
+
+      if (data.success && authData && (authData.token || authData.tokens?.accessToken)) {
         
-        const { user, tokens, individualProfile, attorney, businessProfile } = data.data;
-        const token = tokens.accessToken;
+        const token = authData.token || authData.tokens!.accessToken;
+        const user = authData.user;
         
-        console.log('💾 Storing auth data...');
-        console.log('Token:', token.substring(0, 20) + '...');
-        console.log('User:', user.email);
-        console.log('Email verified:', user.isEmailVerified);
-        
+        // 1. Store state first
         setAuth({
           user,
-          attorney,
-          individualProfile,
-          businessProfile,
+          attorney: authData.attorney,
+          individualProfile: authData.individualProfile,
+          businessProfile: authData.businessProfile,
           token,
-        });
-        
-        console.log('✅ Auth stored');
+        } as AuthStateData);
         
         queryClient.invalidateQueries({ queryKey: ['profile', user.id] });
 
-        setTimeout(() => {
-          console.log('🚀 Attempting navigation...');
-          
-          if (!user.isEmailVerified) {
-            const verifyUrl = `/verify-email?email=${encodeURIComponent(user.email)}`;
-            console.log('➡️ To:', verifyUrl);
-            navigate(verifyUrl, { replace: true });
-          } else {
-            const redirectUrl = new URLSearchParams(window.location.search).get('redirect');
-            const destination = redirectUrl || '/dashboard';
-            console.log('➡️ To:', destination);
-            navigate(destination, { replace: true });
-          }
-        }, 100);
-      } else {
-        console.error('❌ Invalid response structure');
-        console.error('Expected: data.tokens.accessToken');
-        console.error('Got:', data);
+        // --- CORE REDIRECTION LOGIC (IMMEDIATE) ---
+        
+        // DEBUGGING: Check the final state
+        console.log(`[AUTH] Login successful. User Type: ${user.userType}, Verified: ${user.isEmailVerified}`);
+
+        if (!user.isEmailVerified) {
+          // Priority 1: Email not verified
+          const verifyUrl = `/verify-email?email=${encodeURIComponent(user.email)}`;
+          navigate(verifyUrl, { replace: true });
+        } else if (user.userType === 'attorney') {
+          // Priority 2: Attorney Dashboard
+          navigate('/attorney/dashboard', { replace: true }); 
+        } else {
+          // Priority 3: Default Dashboard (Individual/Business)
+          const redirectUrl = new URLSearchParams(window.location.search).get('redirect');
+          const destination = redirectUrl || '/dashboard';
+          navigate(destination, { replace: true });
+        }
       }
     },
     onError: (error) => {
@@ -188,21 +184,26 @@ export function useProfile() {
       } catch (error: any) {
         // Handle 404 - endpoint not implemented yet
         if (error.response?.status === 404) {
-          console.log('⚠️ Profile endpoint not available, using cached auth data');
+          // Removed: console.log('⚠️ Profile endpoint not available, using cached auth data');
           const authState = useAuthStore.getState();
-          return {
-            user: authState.user!,
-            attorney: authState.attorney,
-            individualProfile: authState.individualProfile,
-            businessProfile: authState.businessProfile,
-          };
+          // Safely return the cached state if available, assuming the fetch failed due to 404, not auth issue.
+          if (authState.user) {
+              return {
+                  user: authState.user,
+                  attorney: authState.attorney,
+                  individualProfile: authState.individualProfile,
+                  businessProfile: authState.businessProfile,
+              };
+          }
+          // If the profile endpoint truly failed, re-throw the error
+          throw error;
         }
         throw error;
       }
     },
     enabled: !!userId,
-    retry: false, // Don't retry 404s
-    staleTime: 5 * 60 * 1000, // Cache for 5 minutes
+    retry: false,
+    staleTime: 5 * 60 * 1000,
   });
 }
 
@@ -225,6 +226,7 @@ export function useUpdateProfile() {
         const profileData = attorney || individualProfile || businessProfile;
         
         if (profileData) {
+          // Note: updateProfile likely expects a union of the profile types, which is inferred here
           updateProfile(profileData);
         }
 

@@ -1,4 +1,4 @@
-// User types - consolidated from types/user.ts
+
 export type UserType = 'individual' | 'attorney' | 'business';
 export type EmploymentStatus = 'employed' | 'self-employed' | 'unemployed' | 'student' | 'retired';
 
@@ -24,7 +24,8 @@ export interface Address {
   postalCode?: string;
 }
 
-// Profile types
+// --- Profile Interfaces (Detailed) ---
+
 export interface AttorneyProfile {
   firmName: string;
   yearsOfExperience: number;
@@ -43,7 +44,7 @@ export interface IndividualProfile {
   employmentStatus: EmploymentStatus;
   occupation: string;
   dateOfBirth?: string;
-  address?: string;
+  address?: string; // Consider using the Address interface here instead of string
   taxId?: string;
 }
 
@@ -56,12 +57,19 @@ export interface BusinessProfile {
   numberOfEmployees?: number;
 }
 
-// Extended User type with profile (used for attorney search results)
-export interface Attorney extends User {
-  attorney: AttorneyProfile;
+// --- Auth and API Response Structure ---
+
+// Defines the consistent payload structure for user data (used by AuthResponse/LoginResponse/ProfileResponse)
+export interface AuthResponseData {
+  user: User;
+  attorney?: AttorneyProfile;
+  individualProfile?: IndividualProfile;
+  businessProfile?: BusinessProfile;
+  token?: string; // Token might be top-level or nested depending on the endpoint
+  tokens?: AuthTokens;
+  requiresEmailVerification?: boolean;
 }
 
-// Auth types
 export interface AuthTokens {
   accessToken: string;
   refreshToken: string;
@@ -70,29 +78,27 @@ export interface AuthTokens {
 export interface AuthResponse {
   success: boolean;
   message?: string;
-  data: {
-    user: User;
-    attorney?: AttorneyProfile;
-    individualProfile?: IndividualProfile;
-    businessProfile?: BusinessProfile;
-    token?: string;
-    tokens?: AuthTokens;
-    requiresEmailVerification?: boolean;
-  };
+  data: AuthResponseData;
 }
 
 export interface LoginResponse {
   success: boolean;
   message?: string;
-  data: {
-    user: User;
-    attorney?: AttorneyProfile;
-    individualProfile?: IndividualProfile;
-    businessProfile?: BusinessProfile;
-    token: string;
-    tokens?: AuthTokens;
-  };
+  // Login response guarantees a token
+  data: Omit<AuthResponseData, 'token'> & { token: string }; 
 }
+
+export interface ProfileResponse {
+  success: boolean;
+  data: AuthResponseData;
+}
+
+export interface OtpResponse {
+  success: boolean;
+  message: string;
+}
+
+// --- Input Types ---
 
 export interface RegisterInput {
   fullName: string;
@@ -136,22 +142,21 @@ export interface ProfileUpdateInput {
   specializations?: string[];
 }
 
-export interface OtpResponse {
-  success: boolean;
-  message: string;
+
+// --- Attorney Search Types ---
+
+/**
+ * Defines the combined data structure expected for a single attorney search result item.
+ * It combines the User base data with the nested AttorneyProfile.
+ */
+export interface AttorneySearchResultItem extends User {
+  attorneyProfile: AttorneyProfile; 
 }
 
-export interface ProfileResponse {
-  success: boolean;
-  data: {
-    user: User;
-    attorney?: AttorneyProfile;
-    individualProfile?: IndividualProfile;
-    businessProfile?: BusinessProfile;
-  };
-}
+// Defines Attorney alias to point to the non-conflicting structure used in search results.
+export type Attorney = AttorneySearchResultItem;
 
-// Attorney Search types
+
 export interface AttorneySearchFilters {
   searchQuery?: string;
   specialization?: string;
@@ -162,12 +167,14 @@ export interface AttorneySearchFilters {
 }
 
 export interface AttorneySearchResult {
-  attorneys: Attorney[];
+  // Uses the corrected 'Attorney' type
+  attorneys: Attorney[]; 
   total: number;
   hasMore: boolean;
 }
 
-// Legacy type aliases for backward compatibility
+// --- Legacy/Misc Types ---
+
 export type IUserType = UserType;
 
 export interface ITaxBenefit {

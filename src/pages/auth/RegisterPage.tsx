@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { ArrowRight, Eye, EyeOff } from 'lucide-react';
+import { ArrowRight, Eye, EyeOff, Briefcase, GraduationCap, DollarSign } from 'lucide-react';
 import Input from '@/components/common/Input';
 import Select from '@/components/common/Select';
 import Button from '@/components/common/Button';
@@ -27,12 +27,18 @@ export default function RegisterPage() {
     register: registerField,
     handleSubmit,
     formState: { errors },
+    watch,
   } = useForm<RegisterFormData>({
     resolver: zodResolver(registerSchema),
+    defaultValues: {
+        userType: 'individual', 
+    }
   });
 
+  const selectedUserType = watch('userType'); 
+  const isAttorney = selectedUserType === 'attorney';
+
   const onSubmit = (data: RegisterFormData) => {
-    console.log('📤 Registration data being sent:', data);
     register(data);
   };
 
@@ -63,6 +69,8 @@ export default function RegisterPage() {
 
             {/* Form */}
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+              
+              {/* --- Core Fields --- */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <Input
                   label="Full name"
@@ -100,6 +108,56 @@ export default function RegisterPage() {
                 />
               </div>
 
+              {/* --- Conditional Attorney Fields --- */}
+              {isAttorney && (
+                <div className="space-y-6 border-t pt-6 border-gray-200">
+                    <h2 className="text-xl font-semibold text-gray-700">Attorney Credentials</h2>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <Input
+                            label="Firm / Practice Name"
+                            error={errors.firmName?.message}
+                            {...registerField('firmName')}
+                            placeholder="Doe & Associates Law Firm"
+                            leftIcon={<Briefcase className="w-5 h-5" />}
+                            className="font-light"
+                        />
+                        
+                        <Input
+                            label="Professional License Number"
+                            error={errors.professionalLicenseNumber?.message}
+                            {...registerField('professionalLicenseNumber')}
+                            placeholder="NBA/2020/12345"
+                            leftIcon={<GraduationCap className="w-5 h-5" />}
+                            className="font-light"
+                        />
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <Input
+                            label="Years of Experience"
+                            type="number"
+                            // FIX APPLIED HERE: Use optional chaining on the field property itself
+                            error={errors.yearsOfExperience?.message} 
+                            {...registerField('yearsOfExperience', { valueAsNumber: true })}
+                            placeholder="e.g., 5"
+                            className="font-light"
+                        />
+                        <Input
+                            label="Hourly Rate (NGN)"
+                            type="number"
+                            // FIX APPLIED HERE: Use optional chaining on the field property itself
+                            error={errors.hourlyRate?.message}
+                            {...registerField('hourlyRate', { valueAsNumber: true })}
+                            placeholder="e.g., 50000"
+                            leftIcon={<DollarSign className="w-5 h-5" />}
+                            className="font-light"
+                        />
+                    </div>
+                </div>
+              )}
+              
+              {/* --- Password Fields --- */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="relative">
                   <Input
@@ -138,6 +196,7 @@ export default function RegisterPage() {
                 </div>
               </div>
 
+              {/* --- Terms & Submit --- */}
               <div>
                 <div className="flex items-start gap-3">
                   <input

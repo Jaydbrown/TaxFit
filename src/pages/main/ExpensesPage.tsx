@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { Plus, Search, Filter, Download, Edit, Trash2, Calendar, DollarSign } from 'lucide-react';
 import Button from '@/components/common/Button';
 import Input from '@/components/common/Input';
@@ -8,6 +8,8 @@ import Card from '@/components/common/Card';
 import Badge from '@/components/common/Badge';
 import { formatCurrency, formatDate } from '@/utils/helpers';
 import Layout from '@/components/layout/Layout';
+import ExpensesMonthlyBarChart from '@/components/charts/ExpensesMonthlyBarChart'; 
+import ExpenseOptimizationSuggestions from '@/components/charts/ExpenseOptimizationSuggestions'; 
 
 interface Expense {
   id: string;
@@ -19,35 +21,76 @@ interface Expense {
   status: 'pending' | 'approved' | 'rejected';
 }
 
+interface MonthlyExpense {
+  month: string;
+  totalApprovedAmount: number;
+}
+
+interface TaxData {
+  probableTax: number;
+  actualTax: number;
+  taxYear: number;
+}
+
+interface Recommendation {
+  id: number;
+  area: string;
+  suggestion: string;
+  potentialSavings: number;
+}
+
+// --- Mock Data ---
+
 const mockExpenses: Expense[] = [
+  { id: '1', title: 'Office Supplies', amount: 15000, category: 'Office', date: '2025-01-15', status: 'approved', description: 'Printer paper and ink cartridges' },
+  { id: '2', title: 'Client Lunch', amount: 25000, category: 'Meals', date: '2024-12-14', status: 'pending', description: 'Business lunch with potential client' },
+  { id: '3', title: 'Software License', amount: 50000, category: 'Technology', date: '2024-11-10', status: 'approved', description: 'Annual subscription renewal' },
+  { id: '4', title: 'Travel Reimbursement', amount: 75000, category: 'Travel', date: '2024-10-18', status: 'approved', description: 'Client site visit travel costs' },
+  { id: '5', title: 'Team Dinner', amount: 35000, category: 'Meals', date: '2024-09-20', status: 'approved', description: 'End-of-project team celebration' },
+];
+
+const mockMonthlyExpenses: MonthlyExpense[] = [
+  { month: 'Jan 2025', totalApprovedAmount: 200000 }, 
+  { month: 'Dec 2024', totalApprovedAmount: 120000 },
+  { month: 'Nov 2024', totalApprovedAmount: 95000 },
+  { month: 'Oct 2024', totalApprovedAmount: 180000 },
+  { month: 'Sep 2024', totalApprovedAmount: 70000 },
+  { month: 'Aug 2024', totalApprovedAmount: 150000 },
+  { month: 'Jul 2024', totalApprovedAmount: 210000 },
+  { month: 'Jun 2024', totalApprovedAmount: 105000 },
+  { month: 'May 2024', totalApprovedAmount: 88000 },
+  { month: 'Apr 2024', totalApprovedAmount: 130000 },
+  { month: 'Mar 2024', totalApprovedAmount: 165000 },
+  { month: 'Feb 2024', totalApprovedAmount: 190000 },
+];
+
+const mockTaxData: TaxData = {
+  taxYear: 2024,
+  probableTax: 1250000, 
+  actualTax: 1050000,
+};
+
+const mockRecommendations: Recommendation[] = [
   {
-    id: '1',
-    title: 'Office Supplies',
-    amount: 15000,
-    category: 'Office',
-    date: '2024-01-15',
-    status: 'approved',
-    description: 'Printer paper and ink cartridges',
+    id: 1,
+    area: 'Office Supplies',
+    suggestion: 'Switch two high-volume paper brands to a bulk supplier to save ~15%.',
+    potentialSavings: 50000,
   },
   {
-    id: '2',
-    title: 'Client Lunch',
-    amount: 25000,
-    category: 'Meals',
-    date: '2024-01-14',
-    status: 'pending',
-    description: 'Business lunch with potential client',
+    id: 2,
+    area: 'Technology',
+    suggestion: 'Consolidate redundant annual subscriptions (e.g., VPNs, cloud storage).',
+    potentialSavings: 75000,
   },
   {
-    id: '3',
-    title: 'Software License',
-    amount: 50000,
-    category: 'Technology',
-    date: '2024-01-10',
-    status: 'approved',
-    description: 'Annual subscription renewal',
+    id: 3,
+    area: 'Meals & Entertainment',
+    suggestion: 'Ensure all meal expenses are properly documented with client names for maximum deductibility.',
+    potentialSavings: 120000,
   },
 ];
+
 
 export default function ExpensesPage() {
   const [expenses] = useState<Expense[]>(mockExpenses);
@@ -55,25 +98,45 @@ export default function ExpensesPage() {
   const [searchQuery, setSearchQuery] = useState('');
 
   const totalExpenses = expenses.reduce((sum, exp) => sum + exp.amount, 0);
-  const approvedExpenses = expenses.filter(e => e.status === 'approved').length;
-  const pendingExpenses = expenses.filter(e => e.status === 'pending').length;
+  const approvedExpensesCount = expenses.filter(e => e.status === 'approved').length;
+  const pendingExpensesCount = expenses.filter(e => e.status === 'pending').length;
 
   return (
     <Layout>
       <div className="min-h-screen bg-gray-50">
         <div className="container mx-auto px-4 py-8">
-          {/* Header */}
+          
           <div className="mb-8">
-            <h1 className="text-3xl font-bold text-gray-900 mb-2">Expenses</h1>
-            <p className="text-gray-600">Track and manage your business expenses</p>
+            <h1 className="text-3xl font-bold text-gray-900 mb-2">Expenses & AI Financial Dashboard</h1>
+            <p className="text-gray-600">Track and manage your business expenses, visualize trends, and get AI-driven optimization advice.</p>
           </div>
 
-          {/* Stats */}
+          {/* AI/Chart & Optimization Section: 3-Column Grid */}
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8 h-full">
+            
+            {/* Chart + Tax Summary (Spans 2/3 width) */}
+            <div className="lg:col-span-2">
+                <ExpensesMonthlyBarChart 
+                    monthlyData={mockMonthlyExpenses}
+                    taxSummary={mockTaxData}
+                />
+            </div>
+            
+            {/* AI Optimization Suggestions (Spans 1/3 width) */}
+            <div className="lg:col-span-1">
+                <ExpenseOptimizationSuggestions 
+                    recommendations={mockRecommendations}
+                />
+            </div>
+
+          </div>
+
+          {/* Core Expense Stats */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
             <Card>
               <div className="flex items-center justify-between">
                 <div>
-                  <div className="text-gray-600 text-sm mb-1">Total Expenses</div>
+                  <div className="text-gray-600 text-sm mb-1">Total Expenses Tracked</div>
                   <div className="text-2xl font-bold text-gray-900">
                     {formatCurrency(totalExpenses)}
                   </div>
@@ -87,8 +150,8 @@ export default function ExpensesPage() {
             <Card>
               <div className="flex items-center justify-between">
                 <div>
-                  <div className="text-gray-600 text-sm mb-1">Approved</div>
-                  <div className="text-2xl font-bold text-green-600">{approvedExpenses}</div>
+                  <div className="text-gray-600 text-sm mb-1">Approved for Deductions</div>
+                  <div className="text-2xl font-bold text-green-600">{approvedExpensesCount}</div>
                 </div>
                 <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
                   <Calendar className="w-6 h-6 text-green-600" />
@@ -99,8 +162,8 @@ export default function ExpensesPage() {
             <Card>
               <div className="flex items-center justify-between">
                 <div>
-                  <div className="text-gray-600 text-sm mb-1">Pending</div>
-                  <div className="text-2xl font-bold text-yellow-600">{pendingExpenses}</div>
+                  <div className="text-gray-600 text-sm mb-1">Pending Review</div>
+                  <div className="text-2xl font-bold text-yellow-600">{pendingExpensesCount}</div>
                 </div>
                 <div className="w-12 h-12 bg-yellow-100 rounded-lg flex items-center justify-center">
                   <Calendar className="w-6 h-6 text-yellow-600" />
@@ -109,7 +172,6 @@ export default function ExpensesPage() {
             </Card>
           </div>
 
-          {/* Actions Bar */}
           <Card className="mb-6">
             <div className="flex flex-col md:flex-row gap-4 items-center justify-between">
               <div className="flex-1 w-full md:w-auto">
@@ -141,7 +203,6 @@ export default function ExpensesPage() {
             </div>
           </Card>
 
-          {/* Expenses List */}
           <Card>
             <div className="overflow-x-auto">
               <table className="w-full">
@@ -203,7 +264,6 @@ export default function ExpensesPage() {
             </div>
           </Card>
 
-          {/* Add Expense Modal */}
           <Modal
             isOpen={showAddModal}
             onClose={() => setShowAddModal(false)}
