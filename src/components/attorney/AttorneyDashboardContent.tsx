@@ -75,10 +75,9 @@ const AttorneyDashboardContent: React.FC = () => {
             <div className="min-h-screen bg-gray-50">
                 <div className="container mx-auto px-4 py-8">
                     
-                    {/* Welcome Header */}
                     <div className="mb-8">
                         <div className="flex items-center gap-4 mb-4">
-                            <Avatar src={userData?.avatarUrl} name={userData?.fullName || 'Attorney'} size="lg" />
+                            <Avatar src={userData.avatarUrl ?? undefined} name={userData?.fullName || 'Attorney'} size="lg" />
                             <div>
                                 <h1 className="text-3xl font-bold text-gray-900">Welcome, {firstName}!</h1>
                                 <p className="text-gray-600">
@@ -88,7 +87,6 @@ const AttorneyDashboardContent: React.FC = () => {
                         </div>
                     </div>
 
-                    {/* Practice Stats Grid */}
                     <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
                         <Card hover>
                             <div className="flex items-center justify-between">

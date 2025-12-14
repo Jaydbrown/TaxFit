@@ -1,20 +1,13 @@
-// src/components/attorney/AttorneyCard.tsx
-
 import React from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { MapPin, Star, Briefcase, TrendingUp, ArrowRight, Award } from 'lucide-react';
 import { useAuthStore } from '@/store/auth-store';
-
-// Assuming you import these common components elsewhere
 import Avatar from '@/components/common/Avatar'; 
-import { formatCurrency } from '@/utils/helpers'; // Assuming this exists
+import { formatCurrency } from '@/utils/helpers'; 
 
-// --- Type Definition Alignment ---
-// This interface now uses the standard combined type (Attorney)
-// and maps the AttorneyProfile data onto the card structure.
 interface AttorneyCardProps {
   attorney: {
-    id: string; // User ID
+    id: string;
     fullName: string;
     avatarUrl: string | null;
     
