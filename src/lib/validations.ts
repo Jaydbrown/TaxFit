@@ -1,5 +1,8 @@
 import { z } from 'zod';
 
+// --- Shared Schemas ---
+
+// Password validation schema
 export const passwordSchema = z
   .string()
   .min(8, 'Password must be at least 8 characters')
@@ -8,18 +11,18 @@ export const passwordSchema = z
   .regex(/[0-9]/, 'Password must contain at least one number')
   .regex(/[@$!%*?&#]/, 'Password must contain at least one special character (@$!%*?&#)');
 
-
+// Email validation
 export const emailSchema = z.string().email('Invalid email address');
 
-
+// Phone validation 
 export const phoneSchema = z
   .string()
   .min(1, 'Phone number is required');
 
+// User type enum
+export const userTypeEnum = z.enum(['individual', 'business', 'attorney']);
 
-export const userTypeEnum = z.enum(['individual', 'sme', 'company', 'attorney']);
-
-
+// Address schema
 export const addressSchema = z.object({
   street: z.string().min(1, 'Street is required'),
   city: z.string().min(1, 'City is required'),
@@ -28,7 +31,9 @@ export const addressSchema = z.object({
   postalCode: z.string().optional(),
 });
 
-// Registration schema
+// --- Main Schema ---
+
+// Registration schema with CONDITIONAL VALIDATION using .superRefine()
 export const registerSchema = z.object({
   fullName: z.string().min(2, 'Full name must be at least 2 characters'),
   email: emailSchema,
@@ -38,13 +43,61 @@ export const registerSchema = z.object({
   userType: userTypeEnum,
   referralCode: z.string().optional(),
   acceptTerms: z.boolean().optional().default(true),
+  
+  // NOTE: These fields must be .optional() at the root so they are NOT required for 'individual' or 'business' users.
   firmName: z.string().optional(),
   yearsOfExperience: z.number().optional(),
   professionalLicenseNumber: z.string().optional(),
-}).refine((data) => data.password === data.confirmPassword, {
-  message: "Passwords don't match",
-  path: ['confirmPassword'],
+  hourlyRate: z.number().optional(),
+}).superRefine((data, ctx) => {
+  // 1. Check Password Match
+  if (data.password !== data.confirmPassword) {
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      message: "Passwords don't match",
+      path: ['confirmPassword'],
+    });
+  }
+
+  // 2. Conditional Attorney Field Requirements
+  if (data.userType === 'attorney') {
+    if (!data.firmName || data.firmName.trim() === '') {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "Firm name is required for attorneys.",
+        path: ['firmName'],
+      });
+    }
+
+    if (!data.professionalLicenseNumber || data.professionalLicenseNumber.trim() === '') {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "Professional License Number is required for attorneys.",
+        path: ['professionalLicenseNumber'],
+      });
+    }
+    
+    // Check if yearsOfExperience is present and a valid number (handles empty input resulting in NaN)
+    if (typeof data.yearsOfExperience !== 'number' || data.yearsOfExperience < 0) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "Years of Experience must be a positive number.",
+        path: ['yearsOfExperience'],
+      });
+    }
+    
+    // Check if hourlyRate is present and a valid number
+    if (typeof data.hourlyRate !== 'number' || data.hourlyRate < 0) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "Hourly Rate must be a positive number.",
+        path: ['hourlyRate'],
+      });
+    }
+  }
 });
+
+// --- Other Schemas ---
 
 // Login schema
 export const loginSchema = z.object({
@@ -132,7 +185,8 @@ export const attorneyProfileSchema = z.object({
   bio: z.string().max(500, 'Bio must be less than 500 characters').optional(),
 });
 
-// Export types
+
+// --- Export types ---
 export type RegisterInput = z.infer<typeof registerSchema>;
 export type LoginInput = z.infer<typeof loginSchema>;
 export type OtpVerificationInput = z.infer<typeof otpVerificationSchema>;

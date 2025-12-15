@@ -1,5 +1,6 @@
-// User types
-export type UserType = 'individual' | 'sme' | 'company' | 'attorney';
+
+export type UserType = 'individual' | 'attorney' | 'business'| 'admin';
+export type EmploymentStatus = 'employed' | 'self-employed' | 'unemployed' | 'student' | 'retired';
 
 export interface User {
   id: string;
@@ -9,8 +10,8 @@ export interface User {
   userType: UserType;
   isEmailVerified: boolean;
   isPremium: boolean;
-  avatarUrl?: string;
-  referralCode?: string;
+  avatarUrl?: string | null;
+  referralCode: string;
   createdAt: string;
   updatedAt: string;
 }
@@ -23,22 +24,70 @@ export interface Address {
   postalCode?: string;
 }
 
+// --- Profile Interfaces (Detailed) ---
+
 export interface AttorneyProfile {
   firmName: string;
   yearsOfExperience: number;
-  professionalLicenseNumber: string;
-  hourlyRate?: number;
+  hourlyRate: number;
   specializations?: string[];
+  professionalLicenseNumber?: string;
+  verificationStatus?: 'draft' | 'pending' | 'approved' | 'rejected';
   bio?: string;
+  location?: string;
+  state?: string;
   rating?: number;
   totalCases?: number;
+  successRate?: number;
+  submittedForVerificationAt?: string;
+  rejectionReason?: string;
+  rejectionDetails?: string;
+  professionalDocuments?: any[];
+  education?: {
+        institution: string;
+        degree: string;
+        year: number;
+    }[];
+
+    certifications?: {
+        name: string;
+        issuer: string;
+        year: number;
+    }[];
+    totalReviews?: number; 
+    averageRating?: number;
 }
 
-export interface Attorney extends User {
-  attorney: AttorneyProfile;
+export interface IndividualProfile {
+  employmentStatus: EmploymentStatus;
+  occupation: string;
+  dateOfBirth?: string;
+  address?: string; // Consider using the Address interface here instead of string
+  taxId?: string;
 }
 
-// Auth types
+export interface BusinessProfile {
+  businessName: string;
+  registrationNumber: string;
+  businessType: string;
+  industry: string;
+  annualRevenue?: number;
+  numberOfEmployees?: number;
+}
+
+// --- Auth and API Response Structure ---
+
+// Defines the consistent payload structure for user data (used by AuthResponse/LoginResponse/ProfileResponse)
+export interface AuthResponseData {
+  user: User;
+  attorney?: AttorneyProfile;
+  individualProfile?: IndividualProfile;
+  businessProfile?: BusinessProfile;
+  token?: string; // Token might be top-level or nested depending on the endpoint
+  tokens?: AuthTokens;
+  requiresEmailVerification?: boolean;
+}
+
 export interface AuthTokens {
   accessToken: string;
   refreshToken: string;
@@ -46,29 +95,88 @@ export interface AuthTokens {
 
 export interface AuthResponse {
   success: boolean;
-  message: string;
-  data: {
-    user: User;
-    tokens: AuthTokens;
-    requiresEmailVerification?: boolean;
-  };
+  message?: string;
+  data: AuthResponseData;
 }
 
-export interface LoginResponse extends AuthResponse {}
+export interface LoginResponse {
+  success: boolean;
+  message?: string;
+  data: Omit<AuthResponseData, 'token'> & { token: string }; 
+}
+
+export interface ProfileResponse {
+  success: boolean;
+  data: AuthResponseData;
+}
 
 export interface OtpResponse {
   success: boolean;
   message: string;
 }
 
-export interface ProfileResponse {
-  success: boolean;
-  data: {
-    user: User;
-  };
+// --- Input Types ---
+
+export interface RegisterInput {
+  fullName: string;
+  email: string;
+  phoneNumber: string;
+  password: string;
+  confirmPassword: string;
+  userType: UserType;
+  acceptTerms: boolean;
+  referralCode?: string;
+  // Attorney-specific fields
+  firmName?: string;
+  yearsOfExperience?: number;
+  hourlyRate?: number;
+  professionalLicenseNumber?: string;
+  // Individual-specific fields
+  employmentStatus?: EmploymentStatus;
+  occupation?: string;
 }
 
-// Attorney Search types
+export interface LoginInput {
+  email: string;
+  password: string;
+}
+
+export interface ProfileUpdateInput {
+  fullName?: string;
+  phoneNumber?: string;
+  avatarUrl?: string;
+  // Individual-specific
+  employmentStatus?: EmploymentStatus;
+  occupation?: string;
+  dateOfBirth?: string;
+  address?: string;
+  taxId?: string;
+  // Attorney-specific
+  firmName?: string;
+  yearsOfExperience?: number;
+  hourlyRate?: number;
+  bio?: string;
+  specializations?: string[];
+  education?: {
+        institution: string;
+        degree: string;
+        year: number;
+    }[];
+
+    certifications?: {
+        name: string;
+        issuer: string;
+        year: number;
+    }[];
+}
+
+export interface AttorneySearchResultItem extends User {
+  attorneyProfile: AttorneyProfile; 
+}
+
+export type Attorney = AttorneySearchResultItem;
+
+
 export interface AttorneySearchFilters {
   searchQuery?: string;
   specialization?: string;
@@ -76,10 +184,51 @@ export interface AttorneySearchFilters {
   maxRate?: number;
   location?: string;
   rating?: number;
+  page: number;
+  limit: number;
 }
 
 export interface AttorneySearchResult {
-  attorneys: Attorney[];
+  attorneys: Attorney[]; 
   total: number;
   hasMore: boolean;
+  limit: number;
+}
+
+export interface PayoutRequest {
+  payoutId: string;
+  attorneyId: string;
+  attorneyName: string;
+  amount: number;
+  status: 'pending' | 'processed' | 'failed';
+  requestedAt: string;
+  processorRef?: string;
+}
+
+export interface PayoutListResult {
+  total: number;
+  page: number;
+  limit: number;
+  totalPages: number;
+  payouts: PayoutRequest[];
+}
+
+// Query filter interface for Payouts
+export interface PayoutFilters {
+  status?: 'pending' | 'processed' | 'failed' | 'all';
+  page: number;
+  limit: number;
+  search?: string;
+}
+
+// --- Legacy/Misc Types ---
+
+export type IUserType = UserType;
+
+export interface ITaxBenefit {
+  id: string;
+  title: string;
+  description: string;
+  amount: number;
+  category: string;
 }
