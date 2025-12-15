@@ -21,17 +21,9 @@ import { useAuthStore } from '@/store/auth-store';
 import { formatCurrency } from '@/utils/helpers';
 import { handleApiError } from '@/lib/api-client';
 
-<<<<<<< HEAD
-import { useAttorneys } from '@/hooks/attorney/useFindAttorney';
-import type { AttorneySearchResultItem } from '@/types/attorney';
-
-/* -------------------------------------------------------------------------- */
-/*                               Attorney Card                                */
-/* -------------------------------------------------------------------------- */
-=======
 import { useAttorneys } from '@/hooks/attorney/use-attorneys';
 import type { AttorneySearchResultItem } from '@/types/attorney';
->>>>>>> 8d4b406 (update)
+
 
 interface AttorneyCardProps {
   attorney: AttorneySearchResultItem;
@@ -194,11 +186,9 @@ function AttorneyCard({ attorney }: AttorneyCardProps) {
             className="px-6 py-3 bg-secondary-900 hover:bg-secondary-800 text-white rounded-lg"
           >
             <span className="flex items-center gap-2">
-<<<<<<< HEAD
-              {isAuthenticated ? 'Book Attorney' : 'Sign in to Hire'}
-=======
-              {isAuthenticated ? 'Hire Attorney' : 'Sign in to Hire'}
->>>>>>> 8d4b406 (update)
+
+
+              {isAuthenticated ? 'Hire Attorney' : 'Sign in to Hire'})
               <ArrowRight className="w-4 h-4" />
             </span>
           </button>
@@ -207,14 +197,6 @@ function AttorneyCard({ attorney }: AttorneyCardProps) {
     </div>
   );
 }
-<<<<<<< HEAD
-
-/* -------------------------------------------------------------------------- */
-/*                              FindAttorneyPage                              */
-/* -------------------------------------------------------------------------- */
-=======
->>>>>>> 8d4b406 (update)
-
 export default function FindAttorneyPage() {
   const [searchQuery, setSearchQuery] = React.useState('');
   const [showMobileFilters, setShowMobileFilters] = React.useState(false);

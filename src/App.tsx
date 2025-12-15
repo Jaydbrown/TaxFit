@@ -9,7 +9,6 @@ import ServicesPage from './pages/ServicesPage';
 import AboutPage from './pages/AboutPage';
 
 // 2. Auth Pages
-// ... (existing Auth Imports)
 import LoginPage from './pages/auth/LoginPage';
 import RegisterPage from './pages/auth/RegisterPage';
 import VerifyEmailPage from './pages/auth/VerifyEmailPage';
@@ -26,9 +25,9 @@ import LoansPage from './pages/main/LoanPage';
 import ProfilePage from './pages/main/ProfilePage';
 import TaxDashboardPage from './pages/main/TaxDashboardPage';
 
-// 🎯 NEW BOOKING IMPORTS
-import BookingPage from './pages/main/BookingPage'; // Import the booking form page
-import BookingDetailsPage from './pages/main/BookingDetailsPage'; // Assuming you have a page to view booking details
+// BOOKING IMPORTS
+import BookingPage from './pages/main/BookingPage'; 
+import BookingDetailsPage from './pages/main/BookingDetailsPage'; 
 
 // 4. Attorney Specific Pages
 import AttorneyDashboardContent from './components/attorney/AttorneyDashboardContent';
@@ -36,13 +35,17 @@ import AttorneyClientPortalPage from './components/attorney/AttorneyClientPortal
 import AttorneyBillingInvoicingPage from './components/attorney/AttorneyBillingInvoicingPage';
 import AttorneyTaxResourcesPage from './components/attorney/AttorneyTaxResourcesPage';
 
-// 5. Admin Specific Pages (NEW IMPORTS)
+// 🎯 NEW FIRS NEWS PAGE IMPORT
+import FirsNewsFeedPage from './pages/resources/FirsNewsPage'; 
+
+// 5. Admin Specific Pages
 import AdminDashboardPage from './components/admin/AdminDashboardPage';
 import AdminVerificationPage from './components/admin/AdminAttorneyVerificationPage';
 import AdminReviewPage from './components/admin/AdminAttorneyReviewPage';
 import AdminPayoutsPage from './components/admin/AdminPayoutsPage';
 import AdminUsersPage from './components/admin/AdminUsersPage';
 import AdminAuditPage from './components/admin/AdminAuditPage';
+import MyBookingsPage from './pages/main/MyBookingsPage';
 
 
 // Define the full set of User and Admin roles
@@ -50,7 +53,7 @@ type UserType = 'individual' | 'attorney' | 'business' | 'admin' | 'fitadmin';
 const ADMIN_ROLES: UserType[] = ['admin', 'fitadmin'];
 
 
-// --- ROUTE GUARDS (No changes needed here) ---
+// --- ROUTE GUARDS ---
 
 // Standard Protected Route (Checks auth status)
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
@@ -129,6 +132,9 @@ function App() {
       <Route path="/find-attorney" element={<FindAttorneyPage />} />
       <Route path="/attorney/:id" element={<AttorneyDetailsPage />} />
       
+      {/* 🎯 NEW: FIRS News Feed Page (Publicly accessible) */}
+      <Route path="/firs-news-feed" element={<FirsNewsFeedPage />} /> 
+      
       {/* Auth Routes - Public Only */}
       <Route path="/login" element={<PublicOnlyRoute><LoginPage /></PublicOnlyRoute>} />
       <Route path="/register" element={<PublicOnlyRoute><RegisterPage /></PublicOnlyRoute>} />
@@ -148,7 +154,7 @@ function App() {
       <Route path="/profile/settings" element={<ProtectedRoute><SettingsPage /></ProtectedRoute>} />
 
       {/* ----------------------------------------------------- */}
-      {/* 🎯 BOOKING & HIRE ROUTES (Protected) */}
+      {/* BOOKING & HIRE ROUTES (Protected) */}
       {/* ----------------------------------------------------- */}
       {/* Route for the Booking Form (used by the Hire Attorney button) */}
       <Route 
@@ -158,18 +164,18 @@ function App() {
       
       {/* Route for viewing a specific booking's details */}
       <Route 
-          path="/bookings/:bookingNumber" 
-          element={<ProtectedRoute><BookingDetailsPage /></ProtectedRoute>} 
+          path="/bookings/:bookingId" 
+          element={<ProtectedRoute><BookingDetailsPage/></ProtectedRoute>} 
       />
       
       {/* Route for viewing the user's list of all bookings */}
       <Route 
           path="/bookings/my-bookings" 
-          element={<ProtectedRoute><BookingDetailsPage /></ProtectedRoute>} 
+          element={<ProtectedRoute><MyBookingsPage /></ProtectedRoute>} 
       />
 
       {/* ----------------------------------------------------- */}
-      {/* 🎯 ATTORNEY-SPECIFIC ROUTES (Role Guarded) */}
+      {/* ATTORNEY-SPECIFIC ROUTES (Role Guarded) */}
       {/* ----------------------------------------------------- */}
       <Route 
         path="/attorney/dashboard" 
@@ -189,7 +195,7 @@ function App() {
       />
 
       {/* ----------------------------------------------------- */}
-      {/* 🎯 ADMIN-SPECIFIC ROUTES (Admin Protected) */}
+      {/* ADMIN-SPECIFIC ROUTES (Admin Protected) */}
       {/* ----------------------------------------------------- */}
       <Route 
         path="/admin/dashboard" 

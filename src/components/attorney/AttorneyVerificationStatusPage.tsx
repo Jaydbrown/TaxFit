@@ -66,7 +66,7 @@ const AttorneyVerificationStatusPage: React.FC = () => {
             title = "Verification Rejected";
             description = `Your submission was rejected. Reason: ${status.rejectionReason || 'See details below.'}`;
             actionButton = (
-                <Button onClick={() => navigate('/attorney/submit-verification')} variant="destructive">
+                <Button onClick={() => navigate('/attorney/submit-verification')} variant="danger">
                     Resubmit Profile
                 </Button>
             );

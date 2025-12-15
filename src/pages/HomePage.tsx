@@ -1,9 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import Layout from '@/components/layout/Layout';
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight, BookOpen, AlertTriangle, Loader2 } from 'lucide-react'; 
 import Button from '@/components/common/Button';
+import { formatDate } from '@/utils/helpers'; 
 
+// 🎯 FIRS Hook Import (Requires FirsUpdate interface to include imageUrl?: string)
+import { useFirsRegulatoryUpdates } from '@/hooks/attorney/use-firs-resources'; 
+
+// --- Mock Data (Retained for structure) ---
 const trustedCompanies = [
   'Microsoft', 'JPMorgan Chase', 'Google', 'Goldman Sachs', 'Amazon', 'BlackRock'
 ];
@@ -58,17 +63,45 @@ const caseStudies = [
     label: "Cost Reduction"
   },
 ];
+// --- End Mock Data ---
+
 
 export default function HomePage() {
   const [activeTestimonial, setActiveTestimonial] = useState(0);
+  const [activeFirsIndex, setActiveFirsIndex] = useState(0); // State for FIRS slideshow
   const navigate = useNavigate();
 
+  // FIRS Hook Integration
+  const { data: firsUpdates, isLoading: isFirsLoading } = useFirsRegulatoryUpdates({ search: '', source: 'all' });
+  
+  // Get the top 4 updates for the slideshow
+  const slideshowUpdates = React.useMemo(() => (firsUpdates || []).slice(0, 4), [firsUpdates]);
+  const activeUpdate = slideshowUpdates[activeFirsIndex];
+
+
+  // --- Combined Auto-Scroll Effects ---
   useEffect(() => {
-    const interval = setInterval(() => {
+    // Auto-scroll for Testimonials
+    const testimonialInterval = setInterval(() => {
       setActiveTestimonial((prev) => (prev + 1) % testimonials.length);
     }, 8000);
-    return () => clearInterval(interval);
-  }, []);
+
+    // Auto-scroll for FIRS Updates
+    let firsInterval: number | undefined; // 🎯 FIX: Changed 'const' to 'let' and initialized implicitly as undefined
+    
+    if (slideshowUpdates.length > 1) { // Check before setting the interval
+        firsInterval = setInterval(() => {
+            setActiveFirsIndex((prev) => (prev + 1) % slideshowUpdates.length);
+        }, 10000) as unknown as number; // Keep the type assertion
+    }
+
+    return () => {
+        clearInterval(testimonialInterval);
+        if (firsInterval !== undefined) {
+            clearInterval(firsInterval);
+        }
+    };
+  }, [slideshowUpdates.length]);
 
   return (
     <Layout>
@@ -198,72 +231,126 @@ export default function HomePage() {
         </div>
       </section>
 
-  
-      <section className="py-32 bg-white">
+      {/* Regulatory Intelligence Briefing - Slideshow Card */}
+      <section className="py-20 bg-white border-t border-gray-100">
         <div className="container mx-auto px-6 md:px-12 lg:px-16">
           <div className="max-w-7xl mx-auto">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-24 items-center">
-              <div className="order-2 lg:order-1">
-                <div className="relative">
-                  <div className="aspect-[4/5] bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 relative">
-                    <div className="absolute inset-0 flex items-center justify-center p-16">
-                      <div className="text-center space-y-8">
-                        <div className="text-white/20 text-8xl font-extralight">T</div>
-                        <div className="h-px w-24 bg-white/20 mx-auto"></div>
-                        <div className="text-white/40 text-xs uppercase tracking-[0.3em]">
-                          Excellence in Practice
-                        </div>
-                      </div>
+
+            {isFirsLoading ? (
+                <div className="text-center p-12">
+                    <Loader2 className="w-6 h-6 animate-spin text-gray-400 mx-auto mb-3" />
+                    <p className="text-sm text-gray-500">Fetching regulatory intelligence...</p>
+                </div>
+            ) : slideshowUpdates.length > 0 ? (
+                // --- Slideshow Card Container ---
+                <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 bg-gray-50 p-6 md:p-10 border border-gray-100 relative overflow-hidden">
+                    
+                    {/* Background architectural element */}
+                    <div className="absolute inset-0 opacity-[0.04]">
+                        <div className="absolute top-0 left-1/2 w-px h-full bg-gray-900"></div>
+                        <div className="absolute top-1/2 left-0 h-px w-full bg-gray-900"></div>
                     </div>
-                  </div>
-                  
-                  <div className="absolute -bottom-12 -right-12 bg-white p-10 shadow-2xl">
-                    <div className="text-6xl font-extralight text-gray-900 mb-3">99.9<span className="text-3xl">%</span></div>
-                    <div className="text-xs uppercase tracking-wider text-gray-500">Client Satisfaction</div>
-                    <div className="text-xs text-gray-400 mt-2">Since 2015</div>
-                  </div>
+
+                    {/* Content & Controls (lg:col-span-6) */}
+                    <div className="lg:col-span-6 space-y-8 relative z-10 flex flex-col justify-between">
+                        
+                        <div>
+                            <div className="flex items-center gap-4 mb-4">
+                                <BookOpen className="w-5 h-5 text-primary-600" />
+                                <span className="text-xs uppercase tracking-[0.3em] text-gray-500 font-light">
+                                    Critical Regulatory Intelligence Briefing
+                                </span>
+                            </div>
+
+                            {/* SLIDESHOW TEXT: Use activeUpdate data */}
+                            {activeUpdate && (
+                                <div className="space-y-4 transition-opacity duration-500">
+                                    <h3 className="text-3xl font-light text-gray-900 leading-tight">
+                                        {activeUpdate.title}
+                                    </h3>
+                                    <p className="text-sm text-gray-600 italic">
+                                        Source: {activeUpdate.source} | Published: {formatDate(activeUpdate.date)}
+                                    </p>
+                                </div>
+                            )}
+                        </div>
+                        
+                        {/* Action & Controls Area */}
+                        <div className="space-y-4 pt-4 border-t border-gray-200">
+                            {/* 🎯 DEFENSIVE EXTERNAL LINK FIX */}
+                            <a 
+                                href={activeUpdate?.url?.startsWith('http') ? activeUpdate.url : 'https://www.firs.gov.ng/latest-updates'} 
+                                target="_blank" 
+                                rel="noopener noreferrer"
+                                className={`block w-full lg:w-auto group px-6 py-3 text-white text-sm tracking-wider uppercase font-light flex items-center justify-center transition-all duration-300 ${
+                                    !activeUpdate?.url || activeUpdate.url === '#' || !activeUpdate.url.startsWith('http') 
+                                        ? 'opacity-50 cursor-not-allowed bg-gray-600' 
+                                        : 'bg-gray-900 hover:bg-gray-700'
+                                }`}
+                                onClick={(e) => {
+                                    if (!activeUpdate?.url || activeUpdate.url === '#' || !activeUpdate.url.startsWith('http')) {
+                                        e.preventDefault();
+                                    }
+                                }}
+                            >
+                                <AlertTriangle className="w-4 h-4 mr-2" />
+                                Review Immediate Impact
+                            </a>
+
+                            {/* Pagination Dots (Slideshow Controls) */}
+                            <div className="flex items-center justify-between gap-4">
+                                <div className="flex gap-2">
+                                    {slideshowUpdates.map((_, index) => (
+                                        <button
+                                            key={index}
+                                            onClick={() => setActiveFirsIndex(index)}
+                                            className={`h-px transition-all duration-300 ${
+                                              index === activeFirsIndex 
+                                                ? 'w-10 bg-gray-900' 
+                                                : 'w-5 bg-gray-400 hover:bg-gray-600'
+                                            }`}
+                                            aria-label={`Go to update ${index + 1}`}
+                                        />
+                                    ))}
+                                </div>
+                                {/* FIX: Button with onClick navigate to reliably change route */}
+                                <Button
+                                    variant='link'
+                                    size='sm'
+                                    onClick={() => navigate('/firs-news-feed')} 
+                                    rightIcon={<ArrowRight className='w-3 h-3 transition-transform' />}
+                                    className="text-xs uppercase text-gray-600 hover:text-gray-900 font-medium"
+                                >
+                                    View All Intelligence
+                                </Button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    {/* Image Display (lg:col-span-6) */}
+                    <div className="lg:col-span-6 relative z-10">
+                        <div 
+                            className="aspect-[4/3] bg-gray-200 shadow-xl border border-gray-300 transition-all duration-500"
+                            style={{ 
+                                backgroundImage: activeUpdate?.imageUrl ? `url(${activeUpdate.imageUrl})` : 'none',
+                                backgroundSize: 'cover',
+                                backgroundPosition: 'center',
+                            }}
+                        >
+                            {!activeUpdate?.imageUrl && (
+                                <div className="flex flex-col items-center justify-center h-full text-center p-8 bg-gray-100 text-gray-500">
+                                    <AlertTriangle className="w-8 h-8 mb-2" />
+                                    <span className="text-sm">Visual asset unavailable for this briefing.</span>
+                                </div>
+                            )}
+                        </div>
+                    </div>
                 </div>
-              </div>
-
-              <div className="order-1 lg:order-2 space-y-10">
-                <div className="space-y-6">
-                  <div className="flex items-center gap-4">
-                    <div className="h-px w-12 bg-gray-900"></div>
-                    <span className="text-xs uppercase tracking-[0.3em] text-gray-500">Our Philosophy</span>
-                  </div>
-
-                  <h2 className="text-5xl md:text-6xl font-extralight text-gray-900 leading-tight">
-                    Excellence in
-                    <br />
-                    <span className="italic font-light">tax advisory</span>
-                  </h2>
+            ) : (
+                <div className="text-center p-12">
+                    <p className="text-lg text-gray-500">No critical regulatory updates available at this time.</p>
                 </div>
-
-                <div className="space-y-8 text-lg text-gray-600 leading-relaxed font-light">
-                  <p>
-                    For over a decade, we have dedicated ourselves to one singular pursuit: 
-                    delivering unparalleled tax advisory services to the world's most sophisticated enterprises.
-                  </p>
-                  <p>
-                    Our approach transcends traditional consulting. We forge lasting partnerships 
-                    built on deep expertise, strategic foresight, and an unwavering commitment 
-                    to your financial success.
-                  </p>
-                  <p>
-                    Every client receives the full attention of our most senior tax attorneys—professionals 
-                    who don't just understand tax law, but the intricate dynamics of your business.
-                  </p>
-                </div>
-
-                <Link 
-                  to="/about"
-                  className="inline-flex items-center gap-3 text-sm uppercase tracking-wider text-gray-900 hover:text-gray-600 transition-colors group"
-                >
-                  Discover our approach
-                  <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
-                </Link>
-              </div>
-            </div>
+            )}
           </div>
         </div>
       </section>
@@ -421,6 +508,8 @@ export default function HomePage() {
           </div>
         </div>
       </section>
+
+      {/* Testimonials */}
       <section className="py-32 bg-gray-900 text-white">
         <div className="container mx-auto px-6 md:px-12 lg:px-16">
           <div className="max-w-5xl mx-auto">
@@ -441,7 +530,7 @@ export default function HomePage() {
 
               <div className="flex gap-4">
                 {testimonials.map((_, index) => (
-                  <button
+                  <Button
                     key={index}
                     onClick={() => setActiveTestimonial(index)}
                     className={`h-px transition-all ${

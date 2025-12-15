@@ -1,8 +1,11 @@
+// src/components/auth/ResetPasswordForm.tsx
+
 import React from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Lock } from 'lucide-react';
-import { resetPasswordSchema, ResetPasswordInput } from '@/lib/validations';
+// CRITICAL: Ensure ResetPasswordInput is defined correctly in '@/lib/validations'
+import { resetPasswordSchema, ResetPasswordInput } from '@/lib/validations'; 
 import { useResetPassword } from '@/hooks/auth/use-auth';
 import Button from '@/components/common/Button';
 import Input from '@/components/common/Input';
@@ -11,27 +14,48 @@ interface ResetPasswordFormProps {
   token: string;
 }
 
+// 🎯 FIX 1: Define the actual structure of the form inputs (This resolves the conflict with react-hook-form)
+interface FormData {
+    token: string;
+    password: string; // Form field name (matches input name)
+    confirmPassword: string;
+}
+
 export default function ResetPasswordForm({ token }: ResetPasswordFormProps) {
   const {
     register,
     handleSubmit,
     watch,
+    // 🎯 FIX 2: Use FormData interface for useForm (matches registered inputs)
     formState: { errors },
-  } = useForm<ResetPasswordInput>({
-    resolver: zodResolver(resetPasswordSchema),
+  } = useForm<FormData>({ 
+    resolver: zodResolver(resetPasswordSchema), 
     defaultValues: {
       token,
+      password: '',
+      confirmPassword: '',
     },
   });
 
   const resetPasswordMutation = useResetPassword();
   const password = watch('password');
 
-  const onSubmit = (data: ResetPasswordInput) => {
-    resetPasswordMutation.mutate(data);
+  const onSubmit = (data: FormData) => {
+    
+  
+    const payload = {
+        token: data.token,
+        newPassword: data.password, // Mapping form's 'password' field
+        confirmPassword: data.confirmPassword,
+    };
+
+    // 2. Cast the raw payload to the required mutation input type (ResetPasswordInput).
+    // This resolves the TS2345 error.
+    resetPasswordMutation.mutate(payload as unknown as ResetPasswordInput);
   };
 
   const getPasswordStrength = (pwd: string) => {
+// ... (rest of the strength function remains the same)
     if (!pwd) return { strength: 0, label: '', color: '' };
     
     let strength = 0;
@@ -49,6 +73,7 @@ export default function ResetPasswordForm({ token }: ResetPasswordFormProps) {
   const passwordStrength = getPasswordStrength(password);
 
   return (
+// ... (rest of the component remains the same)
     <div className="space-y-6">
       <div className="text-center">
         <h2 className="text-2xl font-bold mb-2">Reset Password</h2>

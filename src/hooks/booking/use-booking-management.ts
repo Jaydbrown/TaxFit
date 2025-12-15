@@ -9,21 +9,19 @@ import type { Booking, PaginatedResponse } from '@/types/booking';
 
 // --- Type Definitions for API Interaction ---
 
-// Use the full Booking object from the API example
-interface BookingDetailResponse extends AuthResponse {
-    data: Booking;
-}
+// 🎯 FIX: Define the complex type payload structure directly
+type BookingsListData = {
+    bookings: Booking[];
+    pagination: PaginatedResponse;
+    stats?: { [key: string]: number | string }; // For attorney stats
+};
 
-// Type for the list response
-interface BookingsListResponse extends AuthResponse {
-    data: {
-        bookings: Booking[];
-        pagination: PaginatedResponse;
-        stats?: { [key: string]: number | string }; // For attorney stats
-    };
-}
+// 🎯 FIX: Remove redundant interfaces:
+// interface BookingDetailResponse extends ApiResponse<Booking> {} 
+// interface BookingsListResponse extends ApiResponse<BookingsListData> {}
 
-// Type for the initial booking request payload
+
+// Type for the initial booking request payload (remains unchanged)
 interface CreateBookingInput {
     attorneyId: string;
     bookingDate: string; // ISO 8601 DateTime
@@ -32,7 +30,7 @@ interface CreateBookingInput {
     description: string;
     documents?: { name: string; url: string }[];
     bookingType: 'consultation' | 'meeting'; // Example values
-    consultationMode: 'video_call' | 'audio_call' | 'in_person'; // Example values
+    consultationMode: 'video_call' | 'audio_call' | 'in_person' | 'chat'; // Example values
 }
 
 // Type for the booking status query filter
@@ -40,7 +38,7 @@ type BookingStatus = 'all' | 'pending' | 'confirmed' | 'completed' | 'cancelled'
 
 
 // ====================================================================
-// A. CREATE/REQUEST BOOKING (Mutation)
+// A. CREATE/REQUEST BOOKING (Mutation) (Remains unchanged)
 // ====================================================================
 
 /**
@@ -78,12 +76,15 @@ export function useCreateBooking(attorneyId: string) {
  * GET /api/v1/bookings/my-bookings
  */
 export function useUserBookings(status: BookingStatus = 'all', page: number = 1, limit: number = 10) {
-    return useQuery<BookingsListResponse['data']['bookings'], ApiError>({
+    // 🎯 FIX: Use the final payload type (Booking[]) as the query result generic
+    return useQuery<Booking[], ApiError>({ 
         queryKey: ['my-bookings', status, page, limit],
         queryFn: async () => {
             const params = { status, page, limit };
-            const response = await apiClient.get<BookingsListResponse>('/bookings/my-bookings', { params });
-            return response.data.data.bookings;
+            // 🎯 FIX: Use ApiResponse<BookingsListData> directly for the Axios call
+            const response = await apiClient.get<ApiResponse<BookingsListData>>('/bookings/my-bookings', { params });
+            // Return the specific array of bookings
+            return response.data.data.bookings; 
         },
         staleTime: 5 * 60 * 1000,
     });
@@ -100,10 +101,13 @@ export function useUserBookings(status: BookingStatus = 'all', page: number = 1,
  */
 export function useBookingDetails(bookingId: string) {
     const isEnabled = !!bookingId;
-    return useQuery<BookingDetailResponse['data'], ApiError>({
+    // 🎯 FIX: Use the final payload type (Booking) as the query result generic
+    return useQuery<Booking, ApiError>({ 
         queryKey: ['bookingDetails', bookingId],
         queryFn: async () => {
-            const response = await apiClient.get<BookingDetailResponse>(`/bookings/${bookingId}`);
+            // 🎯 FIX: Use ApiResponse<Booking> directly for the Axios call
+            const response = await apiClient.get<ApiResponse<Booking>>(`/bookings/${bookingId}`);
+            // Return the specific Booking object
             return response.data.data;
         },
         enabled: isEnabled,
@@ -113,7 +117,7 @@ export function useBookingDetails(bookingId: string) {
 
 
 // ====================================================================
-// D. CANCEL BOOKING (Mutation)
+// D. CANCEL BOOKING (Mutation) (Remains unchanged)
 // ====================================================================
 
 interface CancelBookingInput {
@@ -147,7 +151,7 @@ export function useCancelBooking() {
 
 
 // ====================================================================
-// E. PROCESS PAYMENT (Mutation)
+// E. PROCESS PAYMENT (Mutation) (Remains unchanged)
 // ====================================================================
 
 interface ProcessPaymentInput {
@@ -181,7 +185,7 @@ export function useProcessPayment() {
 } 
 
 // ====================================================================
-// F. SUBMIT REVIEW (Mutation)
+// F. SUBMIT REVIEW (Mutation) (Remains unchanged)
 // ====================================================================
 
 export interface SubmitReviewInput {

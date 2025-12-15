@@ -1,5 +1,8 @@
+// src/components/attorney/AttorneyGrid.tsx
+
 import React from 'react';
-import { Attorney } from '@/types';
+// Assuming Attorney is defined in '@/types' and is the source type
+import { Attorney } from '@/types'; 
 import AttorneyCard from './AttorneyCard';
 import { LoadingSpinner } from '@/components/common/Spinner';
 import EmptyState from '@/components/common/EmptyState';
@@ -36,7 +39,16 @@ export default function AttorneyGrid({
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
       {attorneys.map((attorney) => (
-        <AttorneyCard key={attorney.id} attorney={attorney} />
+        <AttorneyCard 
+          key={attorney.id} 
+          attorney={{
+            ...attorney,
+            // 🎯 FIX: Explicitly map avatarUrl to string or null.
+            // If attorney.avatarUrl is undefined, use null.
+            // This ensures compatibility with AttorneyCardProps.
+            avatarUrl: attorney.avatarUrl ?? null, 
+          }}
+        />
       ))}
     </div>
   );
