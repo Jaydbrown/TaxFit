@@ -165,7 +165,7 @@ const AdminUsersPage: React.FC = () => {
                                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Type / Status</th>
                                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Joined</th>
                                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Premium Access</th>
-                                <th className="px-6 py-3"></th>
+                                <th className="px-6 py-3">H</th>
                             </tr>
                         </thead>
                         <tbody className="bg-white divide-y divide-gray-200">
@@ -190,7 +190,7 @@ const AdminUsersPage: React.FC = () => {
                                         <tr key={user.id} className="hover:bg-gray-50 transition-colors">
                                             <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                                                 <div className="flex items-center">
-                                                    <Avatar src={user.avatarUrl} name={user.fullName} size="sm" className="mr-3" />
+                                                    <Avatar src={user.avatarUrl || undefined} name={user.fullName} size="sm" className="mr-3" />
                                                     <div>
                                                         <div className="font-medium text-gray-900">{user.fullName}</div>
                                                         <div className="text-xs text-gray-500">{user.email}</div>
@@ -226,7 +226,8 @@ const AdminUsersPage: React.FC = () => {
                                             </td>
                                         </tr>
                                     );
-                                })}
+                                })
+                            )}
                         </tbody>
                     </table>
                 </Card>
