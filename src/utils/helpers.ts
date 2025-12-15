@@ -5,26 +5,44 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-export function formatCurrency(amount: number, currency: string = 'NGN'): string {
-  return new Intl.NumberFormat('en-NG', {
-    style: 'currency',
-    currency,
-    minimumFractionDigits: 0,
-    maximumFractionDigits: 2,
-  }).format(amount);
-}
+// src/utils/helpers.ts
 
-export function formatDate(date: string | Date, format: 'short' | 'long' | 'full' = 'short'): string {
-  const dateObj = typeof date === 'string' ? new Date(date) : date;
-  
-  const formatOptions: Record<string, Intl.DateTimeFormatOptions> = {
-    short: { month: 'short', day: 'numeric', year: 'numeric' },
-    long: { month: 'long', day: 'numeric', year: 'numeric' },
-    full: { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' },
-  };
+/**
+ * Formats a number into a currency string (e.g., $1,200.00).
+ */
+export const formatCurrency = (amount: number, currency: string = 'USD'): string => {
+    return new Intl.NumberFormat('en-US', {
+        style: 'currency',
+        currency: currency,
+    }).format(amount);
+};
 
-  return new Intl.DateTimeFormat('en-US', formatOptions[format]).format(dateObj);
-}
+/**
+ * Formats an ISO 8601 string into a readable date (e.g., Dec 15, 2025).
+ */
+export const formatDate = (isoString: string): string => {
+    if (!isoString) return 'N/A';
+    return new Date(isoString).toLocaleDateString(undefined, {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric',
+    });
+};
+
+/**
+ * FIX: Function needed to resolve the Uncaught SyntaxError.
+ * Formats an ISO 8601 string into a readable time (e.g., 10:00 AM).
+ */
+export const formatTime = (isoString: string): string => {
+    if (!isoString) return 'N/A';
+    return new Date(isoString).toLocaleTimeString(undefined, {
+        hour: 'numeric',
+        minute: '2-digit',
+        hour12: true, // Use 12-hour format with AM/PM
+    });
+};
+
+// Add any other general utility functions here...
 
 export function getInitials(name: string): string {
   return name
@@ -50,3 +68,4 @@ export function debounce<T extends (...args: any[]) => any>(
     timeout = setTimeout(() => func(...args), wait);
   };
 }
+

@@ -14,6 +14,8 @@ interface SelectProps extends React.SelectHTMLAttributes<HTMLSelectElement> {
   options: SelectOption[];
   placeholder?: string;
   fullWidth?: boolean;
+  // 🎯 FIX: Added the leftIcon property
+  leftIcon?: React.ReactNode; 
 }
 
 const Select = React.forwardRef<HTMLSelectElement, SelectProps>(
@@ -27,10 +29,15 @@ const Select = React.forwardRef<HTMLSelectElement, SelectProps>(
       className,
       fullWidth = true,
       disabled,
+      // 🎯 FIX: Destructure the new leftIcon prop
+      leftIcon, 
       ...props
     },
     ref
   ) => {
+    // Determine the left padding class based on the presence of leftIcon
+    const paddingLeftClass = leftIcon ? 'pl-10 pr-10' : 'pl-4 pr-10';
+      
     return (
       <div className={cn('flex flex-col', fullWidth && 'w-full')}>
         {label && (
@@ -41,10 +48,19 @@ const Select = React.forwardRef<HTMLSelectElement, SelectProps>(
         )}
 
         <div className="relative">
+          {/* 🎯 FIX: Render the leftIcon if provided */}
+          {leftIcon && (
+            <div className="absolute left-3 top-1/2 transform -translate-y-1/2 pointer-events-none text-gray-400 z-10">
+              {leftIcon}
+            </div>
+          )}
+
           <select
             ref={ref}
             className={cn(
-              'w-full px-4 py-2.5 pr-10 border rounded-lg appearance-none transition-all duration-200',
+              'w-full py-2.5 border rounded-lg appearance-none transition-all duration-200',
+              // 🎯 FIX: Use the calculated padding class
+              paddingLeftClass, 
               'focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent',
               'disabled:bg-gray-100 disabled:cursor-not-allowed',
               error
@@ -67,6 +83,7 @@ const Select = React.forwardRef<HTMLSelectElement, SelectProps>(
             ))}
           </select>
 
+          {/* ChevronDown remains on the right */}
           <div className="absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none text-gray-400">
             <ChevronDown className="w-5 h-5" />
           </div>

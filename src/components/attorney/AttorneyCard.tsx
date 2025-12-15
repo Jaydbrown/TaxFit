@@ -32,18 +32,22 @@ export default function AttorneyCard({ attorney }: AttorneyCardProps) {
   const navigate = useNavigate();
   const { isAuthenticated } = useAuthStore();
   
-  // Use the nested profile data for display
   const profile = attorney.attorneyProfile;
 
   const handleCardClick = () => {
+    // Navigates to the attorney details page
     navigate(`/attorney/${attorney.id}`);
   };
 
   const handleHireClick = (e: React.MouseEvent) => {
-    e.stopPropagation();
+    // 🛑 CRITICAL FIX: Stop the click event from reaching the parent div's onClick handler
+    e.stopPropagation(); 
+    
     if (isAuthenticated) {
-      navigate(`/attorney/${attorney.id}/hire`);
+      // Navigates to the booking/hire page
+      navigate(`/attorney/${attorney.id}/book`);
     } else {
+      // Navigates to login with a redirect back to the attorney details page
       navigate(`/login?redirect=/attorney/${attorney.id}`);
     }
   };

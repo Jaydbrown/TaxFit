@@ -86,6 +86,7 @@ export interface AuthResponseData {
   token?: string; // Token might be top-level or nested depending on the endpoint
   tokens?: AuthTokens;
   requiresEmailVerification?: boolean;
+  bookingNumber: string;
 }
 
 export interface AuthTokens {
@@ -233,8 +234,21 @@ export interface ITaxBenefit {
   category: string;
 }
 
-export interface ResetPasswordInput {
-  token: string;
-  newPassword: string; 
-  confirmPassword: string;
+export interface ApiErrorResponse {
+    success: false;
+    message: string;
+    errors?: string[] | { [key: string]: string }; // Optional field for validation errors
+}
+
+
+export interface ApiError extends Error {
+    response?: {
+        data: ApiErrorResponse;
+        status: number;
+        statusText: string;
+    };
+    // Include other Axios error properties like code, config, etc., if needed
+    isAxiosError: boolean;
+    name: string;
+    message: string;
 }

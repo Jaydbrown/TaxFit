@@ -1,22 +1,33 @@
-// src/pages/main/DashboardPage.tsx (FIXED FOR ADMIN REDIRECTION)
+// src/pages/main/DashboardPage.tsx (WITH BOOKING SECTION ADDED)
 
 import React from 'react';
-import { Link, Navigate } from 'react-router-dom';
+import { Link, Navigate, useNavigate } from 'react-router-dom';
 import { useAuthStore } from '@/store/auth-store';
 import { useProfile } from '@/hooks/auth/use-auth';
+import { useUserBookings } from '@/hooks/booking/use-booking-management'; // 🎯 NEW IMPORT
 
 import { 
   TrendingUp, DollarSign, FileText, Loader2, Calculator, Users,
-  CreditCard, ArrowRight,
+  CreditCard, ArrowRight, Calendar, // 🎯 Calendar and ArrowRight added
 } from 'lucide-react';
 import Card from '@/components/common/Card';
 import Avatar from '@/components/common/Avatar';
 import { formatCurrency } from '@/utils/helpers';
 import Layout from '@/components/layout/Layout';
+import Button from '@/components/common/Button'; 
+import BookingCard from '@/components/bookings/BookingCard'; 
+
 
 // --- START: General User Dashboard Content (Kept as the default view) ---
 const GeneralDashboardContent: React.FC<{ userData: any }> = ({ userData }) => {
+    const navigate = useNavigate(); // For button navigation
     const firstName = userData?.fullName?.split(' ')[0] || 'User';
+
+    // 🎯 BOOKING HOOK: Fetch the user's upcoming bookings (limit 3 for dashboard)
+    const { data: bookings, isLoading: isLoadingBookings } = useUserBookings('all', 1, 3);
+    
+    // Filter for pending/confirmed bookings to display as upcoming
+    const upcomingBookings = bookings?.filter(b => b.status === 'pending' || b.status === 'confirmed');
 
     // Mock data for the general user dashboard stats (placeholder)
     const mockGeneralStats = {
@@ -61,9 +72,57 @@ const GeneralDashboardContent: React.FC<{ userData: any }> = ({ userData }) => {
                         </div>
                     </div>
 
+                    {/* ----------------------------------------------------- */}
+                    {/* 🎯 UPCOMING CONSULTATIONS / BOOKINGS SECTION (NEW) */}
+                    {/* ----------------------------------------------------- */}
+                    <section className="mt-8 mb-10">
+                        <div className="flex justify-between items-center mb-4">
+                            <h2 className="text-2xl font-semibold text-gray-800 flex items-center gap-3">
+                                <Calendar className="w-6 h-6 text-primary-600" />
+                                Your Upcoming Consultations
+                            </h2>
+                            <Button 
+                                variant="link" 
+                                size="sm"
+                                onClick={() => navigate('/bookings/my-bookings')}
+                                rightIcon={<ArrowRight className="w-4 h-4 ml-1" />}
+                            >
+                                View All Bookings
+                            </Button>
+                        </div>
+
+                        {isLoadingBookings ? (
+                            <div className="flex items-center text-gray-500 p-6 justify-center bg-white rounded-lg shadow">
+                                <Loader2 className="w-5 h-5 animate-spin mr-2" />
+                                Loading bookings...
+                            </div>
+                        ) : upcomingBookings && upcomingBookings.length > 0 ? (
+                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                                {/* Map over the upcoming bookings and render BookingCard */}
+                                {upcomingBookings.map(booking => (
+                                    <BookingCard key={booking._id} booking={booking} />
+                                ))}
+                            </div>
+                        ) : (
+                            <div className="p-8 bg-white border border-dashed border-gray-300 rounded-lg text-center">
+                                <p className="text-lg text-gray-600 mb-4">
+                                    You don't have any pending or confirmed consultations.
+                                </p>
+                                <Button 
+                                    onClick={() => navigate('/find-attorney')} 
+                                    variant="primary"
+                                    size="md"
+                                >
+                                    Find and Book an Attorney
+                                </Button>
+                            </div>
+                        )}
+                    </section>
+                    
                     {/* Stats Grid */}
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
                          <Card hover>
+                            {/* ... (Total Expenses content remains the same) ... */}
                             <div className="flex items-center justify-between">
                                 <div>
                                     <div className="text-gray-600 text-sm mb-2">Total Expenses</div>
@@ -81,6 +140,7 @@ const GeneralDashboardContent: React.FC<{ userData: any }> = ({ userData }) => {
                         </Card>
 
                         <Card hover>
+                            {/* ... (Active Loans content remains the same) ... */}
                             <div className="flex items-center justify-between">
                                 <div>
                                     <div className="text-gray-600 text-sm mb-2">Active Loans</div>
@@ -98,6 +158,7 @@ const GeneralDashboardContent: React.FC<{ userData: any }> = ({ userData }) => {
                         </Card>
 
                         <Card hover>
+                            {/* ... (Tax Saved content remains the same) ... */}
                             <div className="flex items-center justify-between">
                                 <div>
                                     <div className="text-gray-600 text-sm mb-2">Tax Saved</div>
@@ -160,6 +221,7 @@ const GeneralDashboardContent: React.FC<{ userData: any }> = ({ userData }) => {
 
                     {/* Tax Information Banner */}
                     <Card className="bg-gradient-to-r from-primary-50 to-blue-50 border-primary-200">
+                         {/* ... (Tax Information Banner content remains the same) ... */}
                          <div className="flex items-start justify-between">
                             <div className="flex-1">
                                 <div className="flex items-center gap-2 mb-2">

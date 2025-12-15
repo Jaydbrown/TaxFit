@@ -9,6 +9,7 @@ import ServicesPage from './pages/ServicesPage';
 import AboutPage from './pages/AboutPage';
 
 // 2. Auth Pages
+// ... (existing Auth Imports)
 import LoginPage from './pages/auth/LoginPage';
 import RegisterPage from './pages/auth/RegisterPage';
 import VerifyEmailPage from './pages/auth/VerifyEmailPage';
@@ -24,6 +25,10 @@ import ExpensesPage from './pages/main/ExpensesPage';
 import LoansPage from './pages/main/LoanPage';
 import ProfilePage from './pages/main/ProfilePage';
 import TaxDashboardPage from './pages/main/TaxDashboardPage';
+
+// 🎯 NEW BOOKING IMPORTS
+import BookingPage from './pages/main/BookingPage'; // Import the booking form page
+import BookingDetailsPage from './pages/main/BookingDetailsPage'; // Assuming you have a page to view booking details
 
 // 4. Attorney Specific Pages
 import AttorneyDashboardContent from './components/attorney/AttorneyDashboardContent';
@@ -45,7 +50,7 @@ type UserType = 'individual' | 'attorney' | 'business' | 'admin' | 'fitadmin';
 const ADMIN_ROLES: UserType[] = ['admin', 'fitadmin'];
 
 
-// --- ROUTE GUARDS ---
+// --- ROUTE GUARDS (No changes needed here) ---
 
 // Standard Protected Route (Checks auth status)
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
@@ -123,7 +128,6 @@ function App() {
       <Route path="/about" element={<AboutPage />} />
       <Route path="/find-attorney" element={<FindAttorneyPage />} />
       <Route path="/attorney/:id" element={<AttorneyDetailsPage />} />
-      <Route path="/attorney/:id/hire" element={<ProtectedRoute><AttorneyDetailsPage /></ProtectedRoute>} />
       
       {/* Auth Routes - Public Only */}
       <Route path="/login" element={<PublicOnlyRoute><LoginPage /></PublicOnlyRoute>} />
@@ -142,6 +146,27 @@ function App() {
       
       {/* Shared Settings Page */}
       <Route path="/profile/settings" element={<ProtectedRoute><SettingsPage /></ProtectedRoute>} />
+
+      {/* ----------------------------------------------------- */}
+      {/* 🎯 BOOKING & HIRE ROUTES (Protected) */}
+      {/* ----------------------------------------------------- */}
+      {/* Route for the Booking Form (used by the Hire Attorney button) */}
+      <Route 
+          path="/attorney/:id/hire" 
+          element={<ProtectedRoute><BookingPage /></ProtectedRoute>} 
+      />
+      
+      {/* Route for viewing a specific booking's details */}
+      <Route 
+          path="/bookings/:bookingNumber" 
+          element={<ProtectedRoute><BookingDetailsPage /></ProtectedRoute>} 
+      />
+      
+      {/* Route for viewing the user's list of all bookings */}
+      <Route 
+          path="/bookings/my-bookings" 
+          element={<ProtectedRoute><BookingDetailsPage /></ProtectedRoute>} 
+      />
 
       {/* ----------------------------------------------------- */}
       {/* 🎯 ATTORNEY-SPECIFIC ROUTES (Role Guarded) */}

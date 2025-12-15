@@ -7,6 +7,8 @@ import type {
     AttorneySearchResult, 
     AttorneySearchFilters 
 } from '@/types'; 
+import type { AttorneySearchResultItem, GetAttorneysResponse } from '@/types/attorney';
+
 
 
 interface AttorneySearchResponse {
@@ -30,21 +32,18 @@ const cleanFilters = (filters: AttorneySearchFilters) => {
 };
 
 
-export function useAttorneySearch(filters: AttorneySearchFilters) {
-    
-    const cleanedFilters = cleanFilters(filters);
+export function useAttorneys() {
+  return useQuery<AttorneySearchResultItem[]>({
+    queryKey: ['verified-attorneys'],
 
-    return useQuery<AttorneySearchResult, unknown>({
-        queryKey: ['attorneySearch', cleanedFilters],
-        
-        queryFn: async () => {
-            const response = await apiClient.get<AttorneySearchResponse>('/bookings/available', {
-                params: cleanedFilters,
-            });
-            
-            return response.data.data; 
-        },
-        
-        staleTime: 5 * 60 * 1000, 
-    });
+    queryFn: async () => {
+      const res = await apiClient.get<GetAttorneysResponse>(
+        '/bookings/available'
+      );
+
+      return res.data.data;
+    },
+
+    staleTime: 5 * 60 * 1000
+  });
 }
