@@ -68,7 +68,7 @@ export default function AttorneyDashboardPage() {
           <div className="mb-8">
             <div className="flex items-center gap-4 mb-4">
               <Avatar
-                src={userData?.avatarUrl}
+                src={userData?.avatarUrl || undefined }
                 name={userData?.fullName || 'Attorney'}
                 size="lg"
               />

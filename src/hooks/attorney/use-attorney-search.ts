@@ -38,7 +38,7 @@ export function useAttorneySearch(filters: AttorneySearchFilters) {
         queryKey: ['attorneySearch', cleanedFilters],
         
         queryFn: async () => {
-            const response = await apiClient.get<AttorneySearchResponse>('/book/available', {
+            const response = await apiClient.get<AttorneySearchResponse>('/bookings/available', {
                 params: cleanedFilters,
             });
             

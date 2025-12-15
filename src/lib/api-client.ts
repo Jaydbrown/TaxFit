@@ -1,16 +1,10 @@
-// src/lib/api-client.ts
-
 import axios, { AxiosError, AxiosInstance, AxiosResponse, InternalAxiosRequestConfig } from 'axios';
 import { toast } from 'react-hot-toast';
-// We need to dynamically import the store inside the interceptor to avoid a circular dependency
-// with hooks that might import the client.
 
-// --- Configuration ---
 const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000/api/v1';
 const ACCESS_TOKEN_KEY = 'accessToken';
 const REFRESH_TOKEN_KEY = 'refreshToken';
 
-// --- Create axios instance ---
 const apiClient: AxiosInstance = axios.create({
   baseURL: API_BASE_URL,
   timeout: 30000,
@@ -19,7 +13,6 @@ const apiClient: AxiosInstance = axios.create({
   },
 });
 
-// --- 1. Request Interceptor (Adding the Access Token) ---
 apiClient.interceptors.request.use(
   (config: InternalAxiosRequestConfig) => {
     const accessToken = localStorage.getItem(ACCESS_TOKEN_KEY);
@@ -33,7 +26,6 @@ apiClient.interceptors.request.use(
   }
 );
 
-// --- 2. Response Interceptor (Token Refresh and Error Handling) ---
 apiClient.interceptors.response.use(
   (response: AxiosResponse) => {
     return response;
@@ -42,17 +34,13 @@ apiClient.interceptors.response.use(
     const originalRequest = error.config as InternalAxiosRequestConfig & { _retry?: boolean };
     const status = error.response?.status;
 
-    // Helper to trigger Zustand logout and redirect
     const logoutAndRedirect = async (reason: string) => {
         console.error(`Authentication failed: ${reason}. Logging out.`);
         
-        // Dynamically import useAuthStore to avoid circular dependencies
         const { useAuthStore } = await import('@/store/auth-store');
         const logout = useAuthStore.getState().logout;
         
-        logout(); // Clears Zustand state and local storage keys
-        
-        // Use window.location.replace to perform a hard redirect and clear history
+        logout(); 
         window.location.replace('/login');
     };
 

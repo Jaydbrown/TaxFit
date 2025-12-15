@@ -27,7 +27,6 @@ interface ProfileFormProps {
 
 export default function ProfileForm({
   user,
-  individualProfile,
   isEditing,
   isUpdating,
   onEdit,
@@ -66,7 +65,6 @@ export default function ProfileForm({
             value={user?.email || ''}
             disabled
             className="bg-gray-50"
-            helper="Email cannot be changed"
           />
 
           <Input

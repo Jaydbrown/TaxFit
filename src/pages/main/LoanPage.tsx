@@ -165,7 +165,6 @@ export default function LoansPage() {
           </Card>
         </div>
 
-        {/* Loans List */}
         {loans.length === 0 ? (
           <Card>
             <div className="text-center py-12">

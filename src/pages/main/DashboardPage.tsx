@@ -1,4 +1,5 @@
-// src/pages/main/DashboardPage.tsx
+// src/pages/main/DashboardPage.tsx (FIXED FOR ADMIN REDIRECTION)
+
 import React from 'react';
 import { Link, Navigate } from 'react-router-dom';
 import { useAuthStore } from '@/store/auth-store';
@@ -60,9 +61,8 @@ const GeneralDashboardContent: React.FC<{ userData: any }> = ({ userData }) => {
                         </div>
                     </div>
 
-                    {/* Stats Grid (Omitted for brevity) */}
+                    {/* Stats Grid */}
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-                        {/* ... (Your existing Stat Cards here) ... */}
                          <Card hover>
                             <div className="flex items-center justify-between">
                                 <div>
@@ -120,7 +120,7 @@ const GeneralDashboardContent: React.FC<{ userData: any }> = ({ userData }) => {
                         <Card>
                             <h2 className="text-xl font-semibold mb-4">Quick Actions</h2>
                             <div className="space-y-3">
-                                {/* START: IMPLEMENTED QUICK ACTIONS */}
+                                {/* IMPLEMENTED QUICK ACTIONS */}
                                 <QuickActionButton 
                                     to="/expenses"
                                     icon={<DollarSign className="w-4 h-4" />}
@@ -141,7 +141,6 @@ const GeneralDashboardContent: React.FC<{ userData: any }> = ({ userData }) => {
                                     icon={<CreditCard className="w-4 h-4" />}
                                     label="Apply for Tax Loan"
                                 />
-                                {/* END: IMPLEMENTED QUICK ACTIONS */}
                             </div>
                         </Card>
 
@@ -159,7 +158,7 @@ const GeneralDashboardContent: React.FC<{ userData: any }> = ({ userData }) => {
                         </Card>
                     </div>
 
-                    {/* Tax Information Banner (Omitted for brevity) */}
+                    {/* Tax Information Banner */}
                     <Card className="bg-gradient-to-r from-primary-50 to-blue-50 border-primary-200">
                          <div className="flex items-start justify-between">
                             <div className="flex-1">
@@ -193,7 +192,7 @@ const GeneralDashboardContent: React.FC<{ userData: any }> = ({ userData }) => {
 // --- END: General User Dashboard Content ---
 
 
-// --- MAIN DASHBOARD MANAGER (No Change) ---
+// --- MAIN DASHBOARD MANAGER (With Admin Check) ---
 
 export default function DashboardPage() {
     const { user } = useAuthStore();
@@ -212,17 +211,23 @@ export default function DashboardPage() {
     const userData = profile?.user || user;
     
     if (!userData) {
-        // Unauthenticated check
+        // 1. Unauthenticated check
         return <Navigate to="/login" replace />; 
     }
 
-    const isAttorney = userData?.userType === 'attorney';
+    // Define the valid Admin user types based on your system (e.g., 'admin', 'fitadmin')
+    const adminUserTypes = ['admin', 'fitadmin'];
+
+    // 2. ADMIN ROLE MANAGER: Check if the user is an admin
+    if (adminUserTypes.includes(userData.userType)) {
+        return <Navigate to="/admin/dashboard" replace />;
+    }
     
-    // 🎯 ROLE MANAGER: If attorney, redirect to their dedicated path defined in App.tsx
-    if (isAttorney) {
+    // 3. ATTORNEY ROLE MANAGER: Check if the user is an attorney
+    if (userData.userType === 'attorney') {
         return <Navigate to="/attorney/dashboard" replace />;
     }
     
-    // Default render for 'individual' and 'business' users
+    // 4. Default render for 'individual', 'business', or any other standard user
     return <GeneralDashboardContent userData={userData} />;
 }

@@ -195,7 +195,31 @@ export interface AttorneySearchResult {
   limit: number;
 }
 
+export interface PayoutRequest {
+  payoutId: string;
+  attorneyId: string;
+  attorneyName: string;
+  amount: number;
+  status: 'pending' | 'processed' | 'failed';
+  requestedAt: string;
+  processorRef?: string;
+}
 
+export interface PayoutListResult {
+  total: number;
+  page: number;
+  limit: number;
+  totalPages: number;
+  payouts: PayoutRequest[];
+}
+
+// Query filter interface for Payouts
+export interface PayoutFilters {
+  status?: 'pending' | 'processed' | 'failed' | 'all';
+  page: number;
+  limit: number;
+  search?: string;
+}
 
 // --- Legacy/Misc Types ---
 

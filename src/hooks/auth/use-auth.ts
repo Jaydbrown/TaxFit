@@ -179,7 +179,7 @@ export function useProfile() {
     queryKey: ['profile', userId],
     queryFn: async () => {
       try {
-        const response = await apiClient.get<AuthResponse>('/users/profile');
+        const response = await apiClient.get<AuthResponse>('/auth/profile');
         return response.data.data;
       } catch (error: any) {
         // Handle 404 - endpoint not implemented yet
@@ -226,7 +226,6 @@ export function useUpdateProfile() {
         const profileData = attorney || individualProfile || businessProfile;
         
         if (profileData) {
-          // Note: updateProfile likely expects a union of the profile types, which is inferred here
           updateProfile(profileData);
         }
 
@@ -237,7 +236,7 @@ export function useUpdateProfile() {
     },
     onError: (error: any) => {
       if (error.response?.status === 404) {
-        console.error('⚠️ Profile update endpoint not available');
+        console.error(' Profile update endpoint not available');
       }
     },
   });
@@ -271,7 +270,7 @@ export function useUploadAvatar() {
     },
     onError: (error: any) => {
       if (error.response?.status === 404) {
-        console.error('⚠️ Avatar upload endpoint not available');
+        console.error(' Avatar upload endpoint not available');
       }
     },
   });
