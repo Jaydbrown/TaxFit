@@ -51,6 +51,12 @@ type ResetPasswordInput = {
   confirmPassword: string;
 };
 
+export type ApiResetPasswordInput = { 
+  token: string; 
+  newPassword: string;
+  confirmPassword: string;
+};
+
 type ResendOtpInput = { email: string; type: string };
 
 // --- Main Hooks ---
@@ -415,7 +421,8 @@ export function useForgotPassword() {
 export function useResetPassword() {
   const navigate = useNavigate();
 
-  return useMutation<SuccessResponse, ApiError, ResetPasswordInput>({
+  // 🎯 FIX 2: Use the new, unambiguous ApiResetPasswordInput type
+  return useMutation<SuccessResponse, ApiError, ApiResetPasswordInput>({
     mutationKey: ['resetPassword'],
     mutationFn: async (data) => {
       const response = await apiClient.post<SuccessResponse>('/auth/reset-password', data);

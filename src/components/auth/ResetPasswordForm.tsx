@@ -9,12 +9,16 @@ import { resetPasswordSchema, ResetPasswordInput } from '@/lib/validations';
 import { useResetPassword } from '@/hooks/auth/use-auth';
 import Button from '@/components/common/Button';
 import Input from '@/components/common/Input';
+// 🎯 FIX 1: Import the precise API type from the hook file (or shared types)
+// Assuming useResetPassword is in a file that also exports the ApiResetPasswordInput type
+import type { ApiResetPasswordInput } from '@/hooks/auth/use-auth'; 
+
 
 interface ResetPasswordFormProps {
   token: string;
 }
 
-// 🎯 FIX 1: Define the actual structure of the form inputs (This resolves the conflict with react-hook-form)
+// 🎯 FormData correctly represents the actual input fields (use for react-hook-form)
 interface FormData {
     token: string;
     password: string; // Form field name (matches input name)
@@ -26,7 +30,6 @@ export default function ResetPasswordForm({ token }: ResetPasswordFormProps) {
     register,
     handleSubmit,
     watch,
-    // 🎯 FIX 2: Use FormData interface for useForm (matches registered inputs)
     formState: { errors },
   } = useForm<FormData>({ 
     resolver: zodResolver(resetPasswordSchema), 
@@ -40,22 +43,23 @@ export default function ResetPasswordForm({ token }: ResetPasswordFormProps) {
   const resetPasswordMutation = useResetPassword();
   const password = watch('password');
 
+  // 🎯 FINAL FIX: Use the explicit ApiResetPasswordInput type for casting
   const onSubmit = (data: FormData) => {
     
-  
+    // 1. Create the raw payload object with the required API key 'newPassword'.
     const payload = {
         token: data.token,
         newPassword: data.password, // Mapping form's 'password' field
         confirmPassword: data.confirmPassword,
     };
 
-    // 2. Cast the raw payload to the required mutation input type (ResetPasswordInput).
-    // This resolves the TS2345 error.
-    resetPasswordMutation.mutate(payload as unknown as ResetPasswordInput);
+    // 2. Use double assertion (as unknown as T) with the PRECISE API type.
+    // This asserts that the mapped object now matches the mutation function's argument type,
+    // resolving the persistent TS2345 error.
+    resetPasswordMutation.mutate(payload as unknown as ApiResetPasswordInput);
   };
 
   const getPasswordStrength = (pwd: string) => {
-// ... (rest of the strength function remains the same)
     if (!pwd) return { strength: 0, label: '', color: '' };
     
     let strength = 0;
@@ -73,7 +77,6 @@ export default function ResetPasswordForm({ token }: ResetPasswordFormProps) {
   const passwordStrength = getPasswordStrength(password);
 
   return (
-// ... (rest of the component remains the same)
     <div className="space-y-6">
       <div className="text-center">
         <h2 className="text-2xl font-bold mb-2">Reset Password</h2>
