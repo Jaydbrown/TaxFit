@@ -71,6 +71,15 @@ export default function ServicesPage() {
               Connect with verified tax attorneys who specialize in helping businesses 
               and individuals with all their tax needs.
             </p>
+            <div className="pt-4">
+              <button
+                onClick={() => navigate('/find-attorney')}
+                className="group inline-flex items-center gap-2 px-8 py-4 bg-primary-600 text-white rounded-lg font-semibold text-lg hover:bg-primary-700 transition-all duration-300"
+              >
+                Get started
+                <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+              </button>
+            </div>
           </div>
         </div>
       </section>
@@ -124,7 +133,7 @@ export default function ServicesPage() {
         </div>
       </section>
 
-      <section className="py-20 sm:py-24 md:py-32 bg-white">
+      <section className="py-16 sm:py-24 md:py-32 bg-white">
         <div className="container mx-auto px-4 sm:px-6 md:px-12 lg:px-16">
           <div className="max-w-7xl mx-auto">
             <div className="mb-12 sm:mb-16">
@@ -157,11 +166,11 @@ export default function ServicesPage() {
                 ))}
               </div>
 
-              <div className="hidden w-full lg:block overflow-hidden">
+              <div className="hidden lg:block rounded-2xl overflow-hidden">
                 <img
                   src="/images/image1-copy.png"
                   alt="Attorney consultation"
-                  className="w-full h-full  object-cover object-fit"
+                  className="w-full h-full object-cover"
                   onError={(e) => {
                     e.currentTarget.parentElement!.style.display = 'none';
                   }}
