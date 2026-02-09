@@ -122,12 +122,12 @@ export default function HomePage() {
 
   return (
     <Layout>
-      <section 
+      <section
         className="relative min-h-[90vh] lg:min-h-[100vh] flex items-center text-white overflow-hidden mb-[-200px] bg-cover bg-center"
-        style={{ 
+        style={{
           backgroundImage: `url(${imageMap[currentIndex].src})`,
-          backgroundColor: '#0a1628',
-          transition: 'background-image 1s ease-in-out',
+          backgroundColor: "#0a1628",
+          transition: "background-image 1s ease-in-out",
         }}
       >
         <div className="absolute inset-0 bg-gradient-to-r from-black/50 via-black/20 to-transparent" />
@@ -147,8 +147,8 @@ export default function HomePage() {
             </div>
 
             <div className="flex justify-start mb-12 sm:mb-16">
-              <button 
-                onClick={() => navigate('/find-attorney')}
+              <button
+                onClick={() => navigate("/find-attorney")}
                 className="group px-8 sm:px-12 py-4 sm:py-5 bg-white/10 border border-white/30 hover:bg-white/20 text-white rounded-lg font-bold text-base sm:text-lg shadow-2xl transition-all duration-300 hover:scale-105 inline-flex items-center gap-2 sm:gap-3 w-full sm:w-auto justify-center backdrop-blur-sm"
               >
                 Look through our attorneys
@@ -164,13 +164,15 @@ export default function HomePage() {
           <div className="max-w-7xl mx-auto bg-white rounded-2xl shadow-2xl overflow-hidden">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 sm:gap-12 items-center p-8 sm:p-12">
               <div className="relative order-2 lg:order-1">
-                <img 
+                <img
                   src="/images/image-copy.png"
                   alt="Professional tax attorney consultation"
                   className="w-full h-64 sm:h-80 md:h-96 object-cover rounded-2xl shadow-2xl"
                   onError={(e) => {
-                    e.currentTarget.style.display = 'none';
-                    e.currentTarget.nextElementSibling?.classList.remove('hidden');
+                    e.currentTarget.style.display = "none";
+                    e.currentTarget.nextElementSibling?.classList.remove(
+                      "hidden",
+                    );
                   }}
                 />
                 <div className="hidden w-full h-64 sm:h-80 md:h-96 bg-gradient-to-br from-primary-100 via-primary-50 to-secondary-100 rounded-2xl shadow-2xl flex items-center justify-center">
@@ -183,18 +185,19 @@ export default function HomePage() {
                   Expert Legal Guidance, Just a Click Away
                 </h2>
                 <p className="text-base sm:text-lg text-gray-600 leading-relaxed">
-                  Access Nigeria's largest network of verified tax attorneys. Whether you need tax planning, 
-                  compliance advisory, or audit defense, find the perfect legal expert for your needs.
+                  Access Nigeria's largest network of verified tax attorneys.
+                  Whether you need tax planning, compliance advisory, or audit
+                  defense, find the perfect legal expert for your needs.
                 </p>
                 <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 pt-2 sm:pt-4">
-                  <button 
-                    onClick={() => navigate('/find-attorney')}
+                  <button
+                    onClick={() => navigate("/find-attorney")}
                     className="px-5 py-3 sm:px-6 bg-primary-600 text-white rounded-lg font-semibold hover:bg-primary-700 transition-all duration-300 w-full sm:w-auto"
                   >
                     Look through our attorneys
                   </button>
-                  <button 
-                    onClick={() => navigate('/about')}
+                  <button
+                    onClick={() => navigate("/about")}
                     className="px-5 py-3 sm:px-6 bg-white text-gray-900 rounded-lg border-2 border-gray-200 font-semibold hover:border-primary-600 hover:text-primary-600 transition-all duration-300 w-full sm:w-auto"
                   >
                     Learn more
@@ -214,14 +217,19 @@ export default function HomePage() {
             </p>
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-6 sm:gap-8 items-center">
               {trustedCompanies.map((company, index) => (
-                <div key={index} className="text-center flex items-center justify-center">
-                  <img 
+                <div
+                  key={index}
+                  className="text-center flex items-center justify-center"
+                >
+                  <img
                     src={company.logo}
                     alt={company.name}
                     className="h-8 sm:h-10 md:h-12 w-auto opacity-40 hover:opacity-100 transition-opacity duration-300 grayscale hover:grayscale-0"
                     onError={(e) => {
-                      e.currentTarget.style.display = 'none';
-                      e.currentTarget.nextElementSibling?.classList.remove('hidden');
+                      e.currentTarget.style.display = "none";
+                      e.currentTarget.nextElementSibling?.classList.remove(
+                        "hidden",
+                      );
                     }}
                   />
                   <span className="hidden text-sm sm:text-base md:text-lg font-semibold text-gray-300 hover:text-primary-600 transition-colors">
@@ -233,8 +241,9 @@ export default function HomePage() {
           </div>
         </div>
       </section>
-
-      <Card />
+      <div>
+        <Card />
+      </div>
     </Layout>
   );
 }
