@@ -88,11 +88,8 @@ export default function Cards() {
           </div>
         </div>
       </div>
-<<<<<<< HEAD
-    </section>
-  );
-}
-=======
+
+
     </section>)
 };
->>>>>>> fc0d2d1 (update)
+
