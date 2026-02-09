@@ -84,12 +84,6 @@ const values = [
   },
 ];
 
-const stats = [
-  { number: '2,500+', label: 'Verified attorneys', icon: <Users className="w-8 h-8" /> },
-  { number: '50K+', label: 'Cases handled', icon: <TrendingUp className="w-8 h-8" /> },
-  { number: '36', label: 'States covered', icon: <Globe className="w-8 h-8" /> },
-  { number: '98%', label: 'Client satisfaction', icon: <Star className="w-8 h-8" /> },
-];
 
 const team = [
   {
@@ -167,24 +161,6 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* Stats Section */}
-      <section className="py-12 sm:py-16 md:py-20 bg-white border-b border-gray-200">
-        <div className="container mx-auto px-4 sm:px-6 md:px-12 lg:px-16">
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 md:gap-8">
-            {stats.map((stat, index) => (
-              <Card key={index} className="text-center hover:shadow-xl transition-shadow">
-                <div className="p-4 sm:p-6">
-                  <div className="w-12 h-12 sm:w-16 sm:h-16 bg-gradient-to-br from-primary-500 to-primary-600 rounded-2xl flex items-center justify-center mx-auto mb-3 sm:mb-4 shadow-lg shadow-primary-500/30">
-                    <div className="text-white">{stat.icon}</div>
-                  </div>
-                  <div className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-2">{stat.number}</div>
-                  <div className="text-sm sm:text-base text-gray-600">{stat.label}</div>
-                </div>
-              </Card>
-            ))}
-          </div>
-        </div>
-      </section>
 
       {/* Mission & Vision */}
       <section className="py-16 sm:py-20 md:py-24 bg-gray-50">
@@ -194,9 +170,6 @@ export default function AboutPage() {
             <Card className="relative overflow-hidden group hover:shadow-2xl transition-all duration-300">
               <div className="absolute inset-0 bg-gradient-to-br from-primary-500 to-primary-600 opacity-0 group-hover:opacity-5 transition-opacity"></div>
               <div className="p-6 sm:p-8 md:p-10 relative">
-                <div className="w-16 h-16 sm:w-20 sm:h-20 bg-gradient-to-br from-primary-500 to-primary-600 rounded-3xl flex items-center justify-center mb-6 shadow-xl shadow-primary-500/30">
-                  <Target className="w-8 h-8 sm:w-10 sm:h-10 text-white" />
-                </div>
                 <h2 className="text-2xl sm:text-3xl font-bold mb-4 text-gray-900">Our mission</h2>
                 <p className="text-gray-600 leading-relaxed text-base sm:text-lg mb-4">
                   To make professional tax services accessible to every Nigerian by connecting 
@@ -213,9 +186,6 @@ export default function AboutPage() {
             <Card className="relative overflow-hidden group hover:shadow-2xl transition-all duration-300">
               <div className="absolute inset-0 bg-gradient-to-br from-secondary-500 to-secondary-600 opacity-0 group-hover:opacity-5 transition-opacity"></div>
               <div className="p-6 sm:p-8 md:p-10 relative">
-                <div className="w-16 h-16 sm:w-20 sm:h-20 bg-gradient-to-br from-secondary-500 to-secondary-600 rounded-3xl flex items-center justify-center mb-6 shadow-xl shadow-secondary-500/30">
-                  <Eye className="w-8 h-8 sm:w-10 sm:h-10 text-white" />
-                </div>
                 <h2 className="text-2xl sm:text-3xl font-bold mb-4 text-gray-900">Our vision</h2>
                 <p className="text-gray-600 leading-relaxed text-base sm:text-lg mb-4">
                   To become Nigeria's most trusted platform for connecting people with tax 
@@ -236,10 +206,6 @@ export default function AboutPage() {
         <div className="container mx-auto px-4 sm:px-6 md:px-12 lg:px-16">
           <div className="max-w-5xl mx-auto">
             <div className="text-center mb-12 sm:mb-16">
-              <div className="inline-flex items-center gap-2 px-4 py-2 bg-primary-100 rounded-full mb-4">
-                <BookOpen className="w-5 h-5 text-primary-600" />
-                <span className="text-sm font-semibold text-primary-600">Our story</span>
-              </div>
               <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4 text-gray-900">
                 How Tax-FIT began
               </h2>
@@ -256,9 +222,6 @@ export default function AboutPage() {
                   </p>
                 </div>
                 <div className="flex items-center gap-3 ml-12">
-                  <div className="w-12 h-12 bg-gradient-to-br from-primary-500 to-primary-600 rounded-full flex items-center justify-center">
-                    <span className="text-white font-bold">PO</span>
-                  </div>
                   <div>
                     <div className="font-semibold text-gray-900">Peter Orji</div>
                     <div className="text-sm text-gray-600">Co-founder & CEO</div>
@@ -291,87 +254,12 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* Timeline */}
-      <section className="py-16 sm:py-20 md:py-24 bg-gray-50">
-        <div className="container mx-auto px-4 sm:px-6 md:px-12 lg:px-16">
-          <div className="text-center mb-12 sm:mb-16">
-            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4 text-gray-900">
-              Our journey
-            </h2>
-            <p className="text-gray-600 text-base sm:text-lg">
-              From idea to reality
-            </p>
-          </div>
-
-          <div className="max-w-5xl mx-auto">
-            <div className="space-y-6 sm:space-y-8">
-              {milestones.map((milestone, index) => (
-                <Card key={index} className="hover:shadow-xl transition-all">
-                  <div className="p-6 sm:p-8 flex flex-col sm:flex-row gap-4 sm:gap-6 items-start">
-                    <div className="flex-shrink-0">
-                      <div className="w-16 h-16 sm:w-20 sm:h-20 bg-gradient-to-br from-primary-500 to-primary-600 rounded-2xl flex items-center justify-center shadow-lg shadow-primary-500/30">
-                        <div className="text-white">{milestone.icon}</div>
-                      </div>
-                    </div>
-                    <div className="flex-1">
-                      <div className="text-primary-600 font-bold text-base sm:text-lg mb-2">{milestone.year}</div>
-                      <h3 className="text-xl sm:text-2xl font-bold mb-2 text-gray-900">{milestone.title}</h3>
-                      <p className="text-sm sm:text-base text-gray-600 leading-relaxed">{milestone.description}</p>
-                    </div>
-                  </div>
-                </Card>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Values Section */}
-      <section className="py-16 sm:py-20 md:py-24 bg-white">
-        <div className="container mx-auto px-4 sm:px-6 md:px-12 lg:px-16">
-          <div className="text-center mb-12 sm:mb-16">
-            <div className="inline-flex items-center gap-2 px-4 py-2 bg-primary-100 rounded-full mb-4">
-              <Heart className="w-5 h-5 text-primary-600" />
-              <span className="text-sm font-semibold text-primary-600">Our values</span>
-            </div>
-            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4 text-gray-900">
-              What drives us
-            </h2>
-            <p className="text-gray-600 text-base sm:text-lg max-w-2xl mx-auto">
-              The principles behind everything we do
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
-            {values.map((value, index) => (
-              <Card key={index} className="relative overflow-hidden group hover:shadow-2xl transition-all">
-                <div className={`absolute inset-0 bg-gradient-to-br ${value.color} opacity-0 group-hover:opacity-5 transition-opacity`}></div>
-                <div className="p-6 sm:p-8 text-center relative">
-                  <div className={`w-16 h-16 sm:w-20 sm:h-20 ${value.bgColor} rounded-3xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform`}>
-                    <div className={value.textColor}>{value.icon}</div>
-                  </div>
-                  <h3 className="text-xl sm:text-2xl font-bold mb-3 text-gray-900">{value.title}</h3>
-                  <p className="text-sm sm:text-base text-gray-600 leading-relaxed">{value.description}</p>
-                </div>
-              </Card>
-            ))}
-          </div>
-        </div>
-      </section>
 
       {/* Team Section */}
       <section className="py-16 sm:py-20 md:py-24 bg-gradient-to-br from-gray-900 to-gray-800 text-white relative overflow-hidden">
-        <div className="absolute inset-0 opacity-10">
-          <div className="absolute top-0 left-1/4 w-96 h-96 bg-primary-500 rounded-full blur-3xl animate-pulse"></div>
-          <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-primary-500 rounded-full blur-3xl animate-pulse"></div>
-        </div>
 
         <div className="container mx-auto px-4 sm:px-6 md:px-12 lg:px-16 relative z-10">
           <div className="text-center mb-12 sm:mb-16">
-            <div className="inline-flex items-center gap-2 px-4 py-2 bg-primary-500/20 rounded-full mb-4 border border-primary-500/30">
-              <Briefcase className="w-5 h-5 text-primary-400" />
-              <span className="text-sm font-medium text-primary-300">Our team</span>
-            </div>
             <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4">
               Meet the founders
             </h2>
@@ -441,43 +329,6 @@ export default function AboutPage() {
                 </div>
               </Card>
             ))}
-          </div>
-        </div>
-      </section>
-
-      {/* CTA Section */}
-      <section className="py-16 sm:py-20 md:py-24 bg-gradient-to-br from-primary-600 to-primary-700 text-white relative overflow-hidden">
-        <div className="absolute inset-0">
-          <div className="absolute top-0 right-0 w-96 h-96 bg-white/10 rounded-full blur-3xl"></div>
-          <div className="absolute bottom-0 left-0 w-96 h-96 bg-white/10 rounded-full blur-3xl"></div>
-        </div>
-
-        <div className="container mx-auto px-4 sm:px-6 md:px-12 lg:px-16 relative z-10">
-          <div className="max-w-4xl mx-auto text-center">
-            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-6">
-              Ready to find your tax attorney?
-            </h2>
-            <p className="text-base sm:text-lg md:text-xl mb-10 text-gray-100">
-              Join thousands of satisfied clients. Expert attorneys, simple booking, great results.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center">
-              <button
-                onClick={() => navigate('/find-attorney')}
-                className="px-8 py-4 sm:px-10 sm:py-5 bg-white text-primary-600 rounded-lg font-bold shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105 inline-flex items-center justify-center gap-2"
-              >
-                Find attorney
-                <ArrowRight className="w-5 h-5" />
-              </button>
-              <button
-                onClick={() => navigate('/register')}
-                className="px-8 py-4 sm:px-10 sm:py-5 bg-transparent text-white rounded-lg border-2 border-white/30 font-bold hover:bg-white/10 transition-all duration-300"
-              >
-                Create account
-              </button>
-            </div>
-            <p className="text-xs sm:text-sm text-gray-200 mt-6">
-              Free consultation • Verified attorneys • Secure platform
-            </p>
           </div>
         </div>
       </section>
