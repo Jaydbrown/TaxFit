@@ -12,7 +12,7 @@ import { formatDate } from '@/utils/helpers';
 import { 
     useFirsRegulatoryUpdates, 
     getUpdateColor, 
-    FirsUpdate 
+    type FirsUpdate 
 } from '@/hooks/attorney/use-firs-resources';
 
 // Define the filter options based on the defined source types

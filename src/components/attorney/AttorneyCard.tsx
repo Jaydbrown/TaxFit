@@ -1,5 +1,5 @@
 import React from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { MapPin, Star, Briefcase, TrendingUp, ArrowRight, Award } from 'lucide-react';
 import { useAuthStore } from '@/store/auth-store';
 import Avatar from '@/components/common/Avatar'; 

@@ -1,17 +1,16 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { z } from 'zod';
 import { ArrowRight, Eye, EyeOff } from 'lucide-react';
 import Input from '@/components/common/Input';
 import Button from '@/components/common/Button';
 import { useLogin } from '@/hooks/auth/use-auth';
-import { loginSchema } from '@/lib/validations';
+import { loginSchema, type LoginInput } from '@/lib/validations';
 import Footer from '@/components/layout/Footer';
 import { Header } from '@/components/layout';
 
-type LoginFormData = z.infer<typeof loginSchema>;
+type LoginFormData = LoginInput;
 
 export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
@@ -26,7 +25,6 @@ export default function LoginPage() {
   });
 
   const onSubmit = (data: LoginFormData) => {
-    console.log("the data being sent:", data);
     login(data);
   };
 

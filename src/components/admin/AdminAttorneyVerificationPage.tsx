@@ -12,7 +12,7 @@ import Button from '@/components/common/Button';
 // Define the shape of the filter form inputs
 interface FilterFormInputs {
     search: string;
-    status: 'all' | 'true' | 'false'; // ✅ Changed to match new API
+    status: 'all' | 'pending' | 'approved' | 'rejected';
     sortBy: 'submittedAt' | 'name' | 'experience' | 'status';
     sortOrder: 'asc' | 'desc';
 }
@@ -20,9 +20,9 @@ interface FilterFormInputs {
 const AdminAttorneyVerificationPage: React.FC = () => {
     const navigate = useNavigate();
     const [page, setPage] = React.useState(1);
-    
+
     const [appliedFilters, setAppliedFilters] = React.useState({
-        status: 'true', // ✅ Changed from 'pending' to 'true'
+        status: 'pending',
         sortBy: 'submittedAt',
         sortOrder: 'desc',
         search: '',
@@ -31,7 +31,7 @@ const AdminAttorneyVerificationPage: React.FC = () => {
     const { register, watch, handleSubmit } = useForm<FilterFormInputs>({
         defaultValues: {
             search: '',
-            status: 'true', // ✅ Changed from 'pending' to 'true'
+            status: 'pending',
             sortBy: 'submittedAt',
             sortOrder: 'desc',
         },
@@ -77,25 +77,14 @@ const AdminAttorneyVerificationPage: React.FC = () => {
     };
     
     const handleViewDetails = (attorneyId: string) => {
-        // Find the attorney in the current list using comprehensive ID check
         const attorney = attorneys.find(a => {
             const id = a._id || a.id || (a as any).attorneyId || (a as any).userId?.id;
             return id === attorneyId;
         });
-        
-        console.log('📤 Attempting to navigate:');
-        console.log('   Attorney ID:', attorneyId);
-        console.log('   Found attorney:', attorney);
-        
-        if (attorney) {
-            // Pass the attorney data via navigation state
-            navigate(`/admin/attorneys/${attorneyId}/review`, { 
-                state: { attorney } 
-            });
-        } else {
-            console.warn('⚠️ Attorney not found in list, navigating without state');
-            navigate(`/admin/attorneys/${attorneyId}/review`);
-        }
+
+        navigate(`/admin/attorneys/${attorneyId}/review`, {
+            state: attorney ? { attorney } : undefined,
+        });
     };
 
     return (
@@ -167,8 +156,9 @@ const AdminAttorneyVerificationPage: React.FC = () => {
                                 </div>
                             </div>
                             <select {...register('status')} className="p-2 border border-gray-300 rounded-lg">
-                                <option value="true">Verified</option>
-                                <option value="false">Not verified</option>
+                                <option value="pending">Pending review</option>
+                                <option value="approved">Approved</option>
+                                <option value="rejected">Rejected</option>
                                 <option value="all">All statuses</option>
                             </select>
                             <select {...register('sortBy')} className="p-2 border border-gray-300 rounded-lg">
@@ -219,16 +209,7 @@ const AdminAttorneyVerificationPage: React.FC = () => {
                                 </tr>
                             ) : (
                                 attorneys.map((attorney, index) => {
-                                    // ✅ Try all possible ID fields
                                     const attorneyId = attorney._id || attorney.id || (attorney as any).attorneyId || (attorney as any).userId;
-                                    
-                                    // Debug on first attorney only
-                                    if (index === 0) {
-                                        console.log('🔍 First attorney full object:', attorney);
-                                        console.log('🔍 All keys in attorney object:', Object.keys(attorney));
-                                        console.log('🆔 Detected attorney ID:', attorneyId);
-                                    }
-                                    
                                     const statusDisplay = getStatusDisplay(attorney.verificationStatus || 'pending');
                                     const submittedDate = attorney.submittedForVerificationAt ? new Date(attorney.submittedForVerificationAt) : null;
                                     
@@ -255,11 +236,8 @@ const AdminAttorneyVerificationPage: React.FC = () => {
                                             </td>
                                             <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                                                 {attorneyId ? (
-                                                    <Button 
-                                                        onClick={() => {
-                                                            console.log('🎯 Clicking Review for attorney ID:', attorneyId);
-                                                            handleViewDetails(attorneyId);
-                                                        }}
+                                                    <Button
+                                                        onClick={() => handleViewDetails(attorneyId)}
                                                         variant="ghost"
                                                         className="text-primary-600 hover:text-primary-900"
                                                     >

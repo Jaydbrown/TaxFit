@@ -1,6 +1,6 @@
 import React, { useRef, useState } from 'react';
 import { Upload, X, Camera, Loader2 } from 'lucide-react';
-import { validateImageFile, createPreviewUrl, formatFileSize } from '@/utils/fileUpload';
+import { validateImageFile, createPreviewUrl } from '@/utils/fileUpload';
 
 interface ImageUploadProps {
   value?: string | null;

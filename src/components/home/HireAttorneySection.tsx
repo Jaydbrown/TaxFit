@@ -1,4 +1,3 @@
-import React from 'react';
 import { TrendingUp, Scale, Handshake, Users, ArrowRight } from 'lucide-react';
 import Card from '@/components/common/Card';
 

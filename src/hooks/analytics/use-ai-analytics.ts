@@ -1,7 +1,7 @@
 // src/hooks/analytics/use-ai-analytics.ts
 
 import { useQuery } from '@tanstack/react-query';
-import apiClient, { handleApiError } from '@/lib/api-client';
+import apiClient from '@/lib/api-client';
 import type { ApiError, ApiResponse } from '@/types'; 
 
 // --- 1. Optimization Types ---

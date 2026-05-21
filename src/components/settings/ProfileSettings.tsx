@@ -129,10 +129,6 @@ export default function ProfileSettings() {
         });
     };
 
-    const handleInputChange = (field: keyof ProfileFormState, value: string) => {
-        setFormData(prev => ({ ...prev, [field]: value }));
-    };
-    
     // Safety check for user data loaded
     if (!fullUser) {
         return <div className="text-center py-10 text-gray-500">

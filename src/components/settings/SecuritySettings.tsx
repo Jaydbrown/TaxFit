@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Lock, Shield, Eye, EyeOff, Check, Trash2, AlertCircle } from 'lucide-react';
 import Card from '@/components/common/Card';
 import Input from '@/components/common/Input';

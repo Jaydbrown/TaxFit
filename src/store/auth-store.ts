@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { persist } from 'zustand/middleware';
+import { persist, createJSONStorage } from 'zustand/middleware';
 // Import only the types needed for the store state
 import type { User, AttorneyProfile, IndividualProfile, BusinessProfile } from '@/types/index';
 // 1. FIX: REMOVE the conflicting import: 'import { User } from "lucide-react";'
@@ -99,7 +99,7 @@ export const useAuthStore = create<AuthState>()(
     }),
     {
       name: 'auth-storage',
-      getStorage: () => localStorage,
+      storage: createJSONStorage(() => localStorage),
       partialize: (state) => ({
         user: state.user,
         attorney: state.attorney,

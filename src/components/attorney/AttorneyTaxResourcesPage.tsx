@@ -1,13 +1,13 @@
 import React from 'react';
-import { Link, useNavigate } from 'react-router-dom'; // 🎯 Import Link and useNavigate
+import { useNavigate } from 'react-router-dom'; // 🎯 Import Link and useNavigate
 import Layout from '@/components/layout/Layout';
-import { BookOpen, FileText, Globe, Search, Bell, Loader2, XCircle, ArrowRight } from 'lucide-react'; // Added ArrowRight for the 'View All' button
+import { BookOpen, Globe, Bell, Loader2, XCircle, ArrowRight } from 'lucide-react'; // Added ArrowRight for the 'View All' button
 import Card from '@/components/common/Card';
 import { formatDate } from '@/utils/helpers';
 import Button from '@/components/common/Button'; // Assuming Button component is available
 
 // 🎯 NEW: Import the dynamic hook
-import { useFirsRegulatoryUpdates, getUpdateColor, FirsUpdate } from '@/hooks/attorney/use-firs-resources'; // Corrected import path
+import { useFirsRegulatoryUpdates, getUpdateColor, type FirsUpdate } from '@/hooks/attorney/use-firs-resources'; // Corrected import path
 
 // --- Helper Component for Rendering Individual Update (Remains the same) ---
 const UpdateItem: React.FC<{ update: FirsUpdate }> = ({ update }) => {

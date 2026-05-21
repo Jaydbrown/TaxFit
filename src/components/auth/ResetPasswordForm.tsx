@@ -1,11 +1,10 @@
 // src/components/auth/ResetPasswordForm.tsx
 
-import React from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Lock } from 'lucide-react';
 // CRITICAL: Ensure ResetPasswordInput is defined correctly in '@/lib/validations'
-import { resetPasswordSchema, ResetPasswordInput } from '@/lib/validations'; 
+import { resetPasswordSchema } from '@/lib/validations'; 
 import { useResetPassword } from '@/hooks/auth/use-auth';
 import Button from '@/components/common/Button';
 import Input from '@/components/common/Input';

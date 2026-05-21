@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Menu, X, ChevronDown } from "lucide-react";
 import { useAuthStore } from "@/store/auth-store";
@@ -11,7 +11,6 @@ export default function Header() {
   const { isAuthenticated, user, logout } = useAuthStore();
   const navigate = useNavigate();
   const userMenuRef = useRef<HTMLDivElement>(null);
-  const [Page, CurrentPage] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {

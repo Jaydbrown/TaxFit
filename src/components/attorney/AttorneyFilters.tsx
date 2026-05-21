@@ -1,6 +1,5 @@
-import React from 'react';
 import { Filter, X } from 'lucide-react';
-import { AttorneySearchFilters } from '@/types';
+import type { AttorneySearchFilters } from '@/types';
 import Select from '@/components/common/Select';
 import Input from '@/components/common/Input';
 import Button from '@/components/common/Button';

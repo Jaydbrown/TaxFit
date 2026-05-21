@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Plus, DollarSign, Calendar, TrendingUp, CheckCircle, Clock, XCircle } from 'lucide-react';
 import Button from '@/components/common/Button';
 import Card from '@/components/common/Card';

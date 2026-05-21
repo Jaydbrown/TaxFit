@@ -1,7 +1,7 @@
 // src/hooks/attorney/use-attorney-management.ts
 
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import apiClient, { handleApiError } from '@/lib/api-client';
+import { useQuery, useMutation } from '@tanstack/react-query';
+import apiClient from '@/lib/api-client';
 import { toast } from 'react-hot-toast'; // 🎯 FIX 2: Import toast
 import type { ApiError, ApiResponse } from '@/types'; 
 
@@ -55,8 +55,6 @@ export function useAttorneyDashboardStats() {
 // ====================================================================
 
 export function useUploadDocument() {
-    const queryClient = useQueryClient();
-
     // Input is FormData, as it handles file uploads.
     return useMutation<ApiResponse<void>, ApiError, FormData>({
         mutationFn: async (data: FormData) => {

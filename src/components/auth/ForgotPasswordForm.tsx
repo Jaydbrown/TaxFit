@@ -1,9 +1,8 @@
-import React from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Mail } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import { forgotPasswordSchema, ForgotPasswordInput } from '@/lib/validations';
+import { forgotPasswordSchema, type ForgotPasswordInput } from '@/lib/validations';
 import { useForgotPassword } from '@/hooks/auth/use-auth';
 import Button from '@/components/common/Button';
 import Input from '@/components/common/Input';

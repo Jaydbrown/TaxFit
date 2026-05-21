@@ -1,4 +1,3 @@
-import React from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import Layout from '@/components/layout/Layout';
 import Card from '@/components/common/Card';
@@ -15,8 +14,7 @@ export default function FirsNewsDetailPage() {
     const { 
         data: article, 
         isLoading, 
-        isError, 
-        refetch 
+        isError 
     } = useFirsRegulatoryDetail(id || '');
 
     if (isLoading) {

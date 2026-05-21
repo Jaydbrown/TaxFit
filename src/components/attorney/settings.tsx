@@ -1,4 +1,3 @@
-import React from 'react';
 import Layout from '@/components/layout/Layout';
 import { UserCheck, Star, Edit, Upload } from 'lucide-react';
 import { Link } from 'react-router-dom';

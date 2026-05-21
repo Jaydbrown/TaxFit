@@ -1,5 +1,4 @@
-import React, { useRef, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useRef, useState } from 'react';
 import Layout from '@/components/layout/Layout';
 import { ArrowRight, ArrowLeft, ChevronDown, Star } from 'lucide-react';
 import { Swiper, SwiperSlide } from 'swiper/react';
@@ -138,7 +137,6 @@ const faqs = [
 ];
 
 export default function ServicesPage() {
-  const navigate = useNavigate();
   const swiperRef = useRef<SwiperType | null>(null);
   const [openFaq, setOpenFaq] = useState<number | null>(null);
 

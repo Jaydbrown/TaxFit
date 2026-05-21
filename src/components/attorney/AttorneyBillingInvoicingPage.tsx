@@ -1,5 +1,4 @@
 import Card from '../common/Card';
-import React from 'react';
 import Layout from '@/components/layout/Layout';
 import { Users, FolderOpen, MessageSquare, Search } from 'lucide-react';
 

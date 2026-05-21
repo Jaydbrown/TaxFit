@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import Layout from '@/components/layout/Layout';
 import TaxCalculator from '@/components/tax/TaxCalculator';
 import Card from '@/components/common/Card';
@@ -13,7 +13,7 @@ import {
   AlertCircle,
   CheckCircle,
 } from 'lucide-react';
-import { formatNaira, NIGERIAN_VAT_RATE } from '@/lib/tax-calculator';
+import { formatNaira } from '@/lib/tax-calculator';
 
 export default function TaxDashboardPage() {
   const [showCalculator, setShowCalculator] = useState(false);

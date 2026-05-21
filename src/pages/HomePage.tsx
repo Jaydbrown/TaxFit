@@ -1,11 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import Layout from '@/components/layout/Layout';
-import { ArrowRight, Scale, Building2, Briefcase } from 'lucide-react'; 
-import Button from '@/components/common/Button';
-import { formatDate } from '@/utils/helpers'; 
+import { ArrowRight, Scale } from 'lucide-react'; 
 import { useFirsRegulatoryUpdates } from '@/hooks/attorney/use-firs-resources';
-import Marquee from "react-fast-marquee";
 import Card from '@/components/home/cards';
 
 const trustedCompanies = [
@@ -35,59 +32,14 @@ const testimonials = [
   },
 ];
 
-const services = [
-  {
-    icon: Scale,
-    title: "Tax Planning",
-    description: "Get expert help to reduce your tax and save money legally"
-  },
-  {
-    icon: Briefcase,
-    title: "Tax Compliance",
-    description: "Stay up to date with your tax payments and avoid penalties"
-  },
-  {
-    icon: Building2,
-    title: "Tax Problems",
-    description: "Resolve tax issues and get professional representation"
-  },
-];
-
-const caseStudies = [
-  {
-    title: "Small Business Tax Optimization",
-    industry: "E-commerce",
-    challenge: "Managing VAT compliance and optimizing tax structure",
-    result: "15% reduction in tax liability, saved ₦2.5M annually",
-    metric: "₦2.5M",
-    label: "Annual Savings"
-  },
-  {
-    title: "Startup Tax Advisory",
-    industry: "Technology",
-    challenge: "Setting up proper tax structure from inception",
-    result: "Zero compliance issues, proper structure established",
-    metric: "100%",
-    label: "Compliance"
-  },
-  {
-    title: "Professional Services Firm",
-    industry: "Consulting",
-    challenge: "Complex multi-state tax obligations",
-    result: "Streamlined processes, saved ₦1.8M in the first year",
-    metric: "₦1.8M",
-    label: "Cost Savings"
-  },
-];
-
 const imageMap = [
   { id: 1, src: "/images/attorney.png" },
   { id: 2, src: "/images/image-14.png" },
 ];
 
 export default function HomePage() {
-  const [activeTestimonial, setActiveTestimonial] = useState(0);
-  const [activeFirsIndex, setActiveFirsIndex] = useState(0);
+  const [, setActiveTestimonial] = useState(0);
+  const [, setActiveFirsIndex] = useState(0);
   const [currentIndex, setCurrentIndex] = useState(0);
 
   const navigate = useNavigate();

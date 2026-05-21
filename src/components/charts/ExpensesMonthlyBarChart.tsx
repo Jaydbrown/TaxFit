@@ -2,7 +2,7 @@ import React from 'react';
 import { TrendingUp, TrendingDown, Loader2, BarChart, XCircle } from 'lucide-react';
 import Card from '@/components/common/Card'; 
 import { formatCurrency } from '@/utils/helpers';
-import { MonthlyExpense, useMonthlyExpenses } from '@/hooks/analytics/use-ai-analytics'; // 🎯 Import the dynamic hook
+import { useMonthlyExpenses, type MonthlyExpense } from '@/hooks/analytics/use-ai-analytics'; // 🎯 Import the dynamic hook
 
 // --- Component Types ---
 // NOTE: We remove monthlyData from props but keep TaxSummary, as it's separate tax data.

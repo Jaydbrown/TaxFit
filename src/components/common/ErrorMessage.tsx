@@ -1,4 +1,3 @@
-import React from 'react';
 import { AlertCircle, XCircle } from 'lucide-react';
 import { cn } from '@/utils/helpers';
 

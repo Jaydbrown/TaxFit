@@ -33,7 +33,7 @@ const AdminPayoutsPage: React.FC = () => {
     const [isModalOpen, setIsModalOpen] = React.useState(false);
     const [selectedPayout, setSelectedPayout] = React.useState<PayoutRequest | null>(null);
 
-    const { register: registerFilter, handleSubmit: handleFilterSubmit, watch: watchFilter } = useForm<PayoutFilterFormInputs>({
+    const { register: registerFilter, handleSubmit: handleFilterSubmit } = useForm<PayoutFilterFormInputs>({
         defaultValues: { status: 'pending', search: '' },
     });
 

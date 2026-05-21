@@ -6,7 +6,7 @@ import { formatCurrency } from '@/utils/helpers';
 import { toast } from 'react-hot-toast';
 
 // 🎯 NEW: Import the optimization hook and types
-import { useOptimizeExpenses, OptimizationRecommendation } from '@/hooks/analytics/use-ai-analytics';
+import { useOptimizeExpenses } from '@/hooks/analytics/use-ai-analytics';
 
 // The recommendations prop is no longer needed since we fetch them internally
 const ExpenseOptimizationSuggestions: React.FC = () => {

@@ -1,7 +1,7 @@
 // src/pages/expenses/ExpensesPage.tsx
 
-import React, { useState, useMemo } from 'react';
-import { Plus, Search, Filter, Download, Edit, Trash2, Calendar, DollarSign, Loader2, Zap, AlertTriangle } from 'lucide-react';
+import React, { useState } from 'react';
+import { Plus, Search, Filter, Download, Edit, Trash2, DollarSign, Loader2, AlertTriangle } from 'lucide-react';
 import Button from '@/components/common/Button';
 import Input from '@/components/common/Input';
 import Select from '@/components/common/Select';
@@ -26,8 +26,8 @@ import {
     useCreateExpense, 
     useUpdateExpense, 
     useDeleteExpense,
-    Expense,
-    ExpenseInput
+    type Expense,
+    type ExpenseInput
 } from '@/hooks/expenses/use-expense-management'; 
 
 // Components we assume are implemented:
@@ -82,7 +82,7 @@ export default function ExpensesPage() {
   const totalExpenses = summary?.totalExpenses ?? 0;
   const totalApprovedAmount = summary?.approvedDeductibleAmount ?? 0;
   const pendingExpensesCount = summary?.pendingReviewCount ?? 0;
-  const approvedExpensesCount = expenses.length - pendingExpensesCount; // Quick estimate if summary doesn't give this specific stat
+  // const approvedExpensesCount = expenses.length - pendingExpensesCount; // Quick estimate if summary doesn't give this specific stat
 
   // --- Handlers (remain the same) ---
   const openAddModal = () => {

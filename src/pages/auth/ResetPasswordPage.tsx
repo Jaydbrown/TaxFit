@@ -1,22 +1,14 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Link, useSearchParams, useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { z } from 'zod';
 import { ArrowRight, Eye, EyeOff, CheckCircle } from 'lucide-react';
 import Input from '@/components/common/Input';
 import Button from '@/components/common/Button';
 import { useResetPassword } from '@/hooks/auth/use-auth';
+import { resetPasswordFormSchema, type ResetPasswordFormInput } from '@/lib/validations';
 
-const resetPasswordSchema = z.object({
-  password: z.string().min(8, 'Password must be at least 8 characters'),
-  confirmPassword: z.string(),
-}).refine((data) => data.password === data.confirmPassword, {
-  message: "Passwords don't match",
-  path: ['confirmPassword'],
-});
-
-type ResetPasswordFormData = z.infer<typeof resetPasswordSchema>;
+type ResetPasswordFormData = ResetPasswordFormInput;
 
 export default function ResetPasswordPage() {
   const [searchParams] = useSearchParams();
@@ -32,7 +24,7 @@ export default function ResetPasswordPage() {
     handleSubmit,
     formState: { errors },
   } = useForm<ResetPasswordFormData>({
-    resolver: zodResolver(resetPasswordSchema),
+    resolver: zodResolver(resetPasswordFormSchema),
   });
 
   const onSubmit = (data: ResetPasswordFormData) => {

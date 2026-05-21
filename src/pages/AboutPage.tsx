@@ -1,89 +1,9 @@
-import React from 'react';
-import { useNavigate } from 'react-router-dom';
 import Layout from '@/components/layout/Layout';
 import { 
-  Target, 
-  Eye, 
-  Award, 
-  Users, 
-  TrendingUp, 
-  Heart, 
   Star,
-  Zap,
-  Sparkles,
-  ArrowRight,
-  Quote,
-  Globe,
-  BookOpen,
-  Briefcase,
-  Code,
-  Scale
+  Quote
 } from 'lucide-react';
 import Card from '@/components/common/Card';
-import Button from '@/components/common/Button';
-
-const milestones = [
-  {
-    year: '2024',
-    title: 'Platform launched',
-    description: 'Tax-FIT launched to connect Nigerians with verified tax attorneys',
-    icon: <Sparkles className="w-6 h-6" />,
-  },
-  {
-    year: '2024',
-    title: '500+ attorneys',
-    description: 'Built Nigeria\'s largest network of verified tax attorneys',
-    icon: <Users className="w-6 h-6" />,
-  },
-  {
-    year: '2024',
-    title: 'Nationwide coverage',
-    description: 'Expanded services to all 36 states and FCT',
-    icon: <Globe className="w-6 h-6" />,
-  },
-  {
-    year: '2024',
-    title: 'Growing fast',
-    description: 'Becoming Nigeria\'s most trusted tax attorney platform',
-    icon: <TrendingUp className="w-6 h-6" />,
-  },
-];
-
-const values = [
-  {
-    icon: <Award className="w-12 h-12" />,
-    title: 'Excellence',
-    description: 'We connect you with the best tax attorneys who deliver quality service every time.',
-    color: 'from-yellow-500 to-orange-500',
-    bgColor: 'bg-yellow-100',
-    textColor: 'text-yellow-600',
-  },
-  {
-    icon: <Heart className="w-12 h-12" />,
-    title: 'Trust',
-    description: 'Every attorney is verified and reviewed. Your trust is our priority.',
-    color: 'from-red-500 to-pink-500',
-    bgColor: 'bg-red-100',
-    textColor: 'text-red-600',
-  },
-  {
-    icon: <Users className="w-12 h-12" />,
-    title: 'Accessibility',
-    description: 'Professional tax help should be available to everyone, not just big companies.',
-    color: 'from-blue-500 to-cyan-500',
-    bgColor: 'bg-blue-100',
-    textColor: 'text-blue-600',
-  },
-  {
-    icon: <Zap className="w-12 h-12" />,
-    title: 'Simplicity',
-    description: 'Finding and booking a tax attorney should be easy. We make it simple.',
-    color: 'from-purple-500 to-pink-500',
-    bgColor: 'bg-purple-100',
-    textColor: 'text-purple-600',
-  },
-];
-
 
 const team = [
   {
@@ -131,8 +51,6 @@ const testimonials = [
 ];
 
 export default function AboutPage() {
-  const navigate = useNavigate();
-
   return (
     <Layout>
       {/* Hero Section */}

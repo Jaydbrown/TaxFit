@@ -199,7 +199,7 @@ function AttorneyCard({ attorney }: AttorneyCardProps) {
 }
 export default function FindAttorneyPage() {
   const [searchQuery, setSearchQuery] = React.useState('');
-  const [showMobileFilters, setShowMobileFilters] = React.useState(false);
+  const [, _setShowMobileFilters] = React.useState(false);
 
   const {
     data: attorneys = [],

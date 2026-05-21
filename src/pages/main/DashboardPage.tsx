@@ -10,7 +10,6 @@ import {
 } from 'lucide-react';
 import Card from '@/components/common/Card';
 import Avatar from '@/components/common/Avatar';
-import { formatCurrency } from '@/utils/helpers';
 import Layout from '@/components/layout/Layout';
 import Button from '@/components/common/Button'; 
 import BookingCard from '@/components/bookings/BookingCard'; 

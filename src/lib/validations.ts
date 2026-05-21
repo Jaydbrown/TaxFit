@@ -123,9 +123,18 @@ export const forgotPasswordSchema = z.object({
   email: emailSchema,
 });
 
-// Reset password schema
+// Reset password schema (full — includes token for API payload)
 export const resetPasswordSchema = z.object({
   token: z.string().min(1, 'Token is required'),
+  password: passwordSchema,
+  confirmPassword: z.string(),
+}).refine((data) => data.password === data.confirmPassword, {
+  message: "Passwords don't match",
+  path: ['confirmPassword'],
+});
+
+// Reset password form schema (no token — token comes from URL params)
+export const resetPasswordFormSchema = z.object({
   password: passwordSchema,
   confirmPassword: z.string(),
 }).refine((data) => data.password === data.confirmPassword, {
@@ -193,6 +202,7 @@ export type OtpVerificationInput = z.infer<typeof otpVerificationSchema>;
 export type ResendOtpInput = z.infer<typeof resendOtpSchema>;
 export type ForgotPasswordInput = z.infer<typeof forgotPasswordSchema>;
 export type ResetPasswordInput = z.infer<typeof resetPasswordSchema>;
+export type ResetPasswordFormInput = z.infer<typeof resetPasswordFormSchema>;
 export type ChangePasswordInput = z.infer<typeof changePasswordSchema>;
 export type UpdateProfileInput = z.infer<typeof updateProfileSchema>;
 export type AttorneySearchInput = z.infer<typeof attorneySearchSchema>;

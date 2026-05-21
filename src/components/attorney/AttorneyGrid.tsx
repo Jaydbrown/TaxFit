@@ -1,8 +1,7 @@
 // src/components/attorney/AttorneyGrid.tsx
 
-import React from 'react';
 // Assuming Attorney is defined in '@/types' and is the source type
-import { Attorney } from '@/types'; 
+import type { Attorney } from '@/types'; 
 import AttorneyCard from './AttorneyCard';
 import { LoadingSpinner } from '@/components/common/Spinner';
 import EmptyState from '@/components/common/EmptyState';

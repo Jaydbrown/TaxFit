@@ -1,7 +1,7 @@
 import React from 'react';
-import { useExpenseAnomalies, ExpenseAnomaly } from '@/hooks/analytics/use-ai-analytics';
+import { useExpenseAnomalies, type ExpenseAnomaly } from '@/hooks/analytics/use-ai-analytics';
 import Card from '@/components/common/Card';
-import { AlertTriangle, Loader2, DollarSign } from 'lucide-react';
+import { AlertTriangle, Loader2 } from 'lucide-react';
 import { formatCurrency, formatDate } from '@/utils/helpers';
 import Button from '@/components/common/Button';
 

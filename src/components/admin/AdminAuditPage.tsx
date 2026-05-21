@@ -1,5 +1,4 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { Search, Filter, History, Loader2, ArrowLeft, ArrowRight } from 'lucide-react';
 import { format, formatDistanceToNow } from 'date-fns';
@@ -28,7 +27,7 @@ const AuditLogPage: React.FC = () => {
     
     const limit = 15; // Define the number of items per page
 
-    const { register, watch, handleSubmit } = useForm<AuditFilterFormInputs>({
+    const { register, handleSubmit } = useForm<AuditFilterFormInputs>({
         defaultValues: appliedFilters,
     });
 

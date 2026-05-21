@@ -116,7 +116,7 @@ function VerificationStatusBanner({ status, rejectionReason, rejectionDetails }:
 // --- MAIN PAGE COMPONENT ---
 export default function AttorneyVerificationPage() {
   const navigate = useNavigate();
-  const { user } = useAuthStore();
+  useAuthStore();
   const { data: profile } = useProfile();
   const { data: verificationData, isLoading: statusLoading } = useVerificationStatus();
   const { mutate: submitVerification, isPending: isSubmitting } = useSubmitVerification();
@@ -128,7 +128,6 @@ export default function AttorneyVerificationPage() {
   const [dragActive, setDragActive] = useState(false);
 
   const currentStatus = verificationData?.verificationStatus || 'draft';
-  const canSubmit = currentStatus === 'draft' || currentStatus === 'rejected';
   const attorneyProfile = profile?.attorney;
 
   const {

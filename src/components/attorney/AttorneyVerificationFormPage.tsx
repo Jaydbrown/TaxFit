@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useForm, SubmitHandler, useFieldArray } from 'react-hook-form'; // FIX 1: Import useFieldArray
+import { useForm, type SubmitHandler, useFieldArray } from 'react-hook-form'; // FIX 1: Import useFieldArray
 import { toast } from 'react-hot-toast'; 
 import { Loader2, CheckCircle, Upload, Plus, Trash2 } from 'lucide-react'; // FIX 2: Added Plus and Trash2
 

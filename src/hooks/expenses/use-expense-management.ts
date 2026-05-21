@@ -74,7 +74,7 @@ export function useCreateExpense() {
             const response = await apiClient.post<ApiResponse<Expense>>('/expenses', data);
             return response.data.data; // Return the inner Expense object
         },
-        onSuccess: (response) => {
+        onSuccess: () => {
             // response is now the Expense object
             toast.success('Expense successfully added!'); 
             queryClient.invalidateQueries({ queryKey: ['expenses'] }); 
@@ -106,7 +106,7 @@ export function useUpdateExpense() {
             const response = await apiClient.put<ApiResponse<Expense>>(`/expenses/${id}`, data);
             return response.data.data; // Return the inner Expense object
         },
-        onSuccess: (response) => {
+        onSuccess: () => {
             toast.success('Expense successfully updated!');
             queryClient.invalidateQueries({ queryKey: ['expenses'] }); 
         },

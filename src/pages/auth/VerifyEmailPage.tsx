@@ -1,9 +1,8 @@
-import React from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { CheckCircle, ArrowRight } from 'lucide-react';
-import { otpVerificationSchema, OtpVerificationInput } from '@/lib/validations';
+import { otpVerificationSchema, type OtpVerificationInput } from '@/lib/validations';
 import { useVerifyEmail, useResendOtp } from '@/hooks/auth/use-auth';
 import Button from '@/components/common/Button';
 import Input from '@/components/common/Input';
@@ -29,17 +28,12 @@ export default function VerifyEmailPage() {
   const resendOtpMutation = useResendOtp();
 
   const onSubmit = (data: OtpVerificationInput) => {
-    console.log('🚀 Verifying email:', data);
     verifyEmailMutation.mutate(data);
   };
 
   const handleResend = () => {
     if (email) {
-      console.log('🔄 Resending OTP to:', email);
-      resendOtpMutation.mutate({ 
-        email,
-        type: 'email_verification' 
-      });
+      resendOtpMutation.mutate({ email, type: 'email_verification' });
     }
   };
 

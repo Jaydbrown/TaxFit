@@ -10,7 +10,7 @@ import Input from '@/components/common/Input';
 import Select from '@/components/common/Select';
 import { Calendar, Clock, User, Hash, Filter, ChevronRight, Loader2, ListOrdered, XCircle, Search, RefreshCw } from 'lucide-react'; 
 import { formatDate } from '@/utils/helpers';
-import { useUserBookings, Booking } from '@/hooks/booking/use-user-bookings'; 
+import { useUserBookings, type Booking } from '@/hooks/booking/use-user-bookings'; 
 
 // --- Helper Functions ---
 

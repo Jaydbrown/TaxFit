@@ -9,7 +9,7 @@ import {
   calculateCapitalGainsTax,
   calculateTaxSavings,
   calculateQuarterlyTax,
-  TaxCalculationInput,
+  type TaxCalculationInput,
 } from '@/lib/tax-calculator';
 
 export default {}

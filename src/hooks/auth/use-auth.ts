@@ -45,14 +45,8 @@ type ChangePasswordInput = {
   confirmPassword: string;
 };
 
-type ResetPasswordInput = { 
-  token: string; 
-  newPassword: string;
-  confirmPassword: string;
-};
-
-export type ApiResetPasswordInput = { 
-  token: string; 
+export type ApiResetPasswordInput = {
+  token: string;
   newPassword: string;
   confirmPassword: string;
 };
@@ -163,7 +157,6 @@ export function useLogin() {
 
         // --- CORE REDIRECTION LOGIC (IMMEDIATE) ---
         
-        console.log(`[AUTH] Login successful. User Type: ${user.userType}, Verified: ${user.isEmailVerified}`);
 
         if (!user.isEmailVerified) {
           // Priority 1: Email not verified
@@ -218,7 +211,6 @@ export function useAdminLogin() {
         
         queryClient.invalidateQueries({ queryKey: ['profile', user.id] });
 
-        console.log(`[ADMIN AUTH] Login successful. User Type: ${user.userType}`);
 
         // Redirect to admin dashboard
         navigate('/admin/dashboard', { replace: true });
@@ -271,8 +263,6 @@ export function useAdminRegister() {
             token,
           });
         }
-        
-        console.log('[ADMIN AUTH] Registration successful');
         
         // Redirect to admin dashboard
         navigate('/admin/dashboard', { replace: true });
@@ -520,16 +510,11 @@ export function useForgotPassword() {
 }
 
 export function useResetPassword() {
-  const navigate = useNavigate();
-
   return useMutation<SuccessResponse, ApiError, ApiResetPasswordInput>({
     mutationKey: ['resetPassword'],
     mutationFn: async (data) => {
       const response = await apiClient.post<SuccessResponse>('/auth/reset-password', data);
       return response.data;
-    },
-    onSuccess: () => {
-      navigate('/login', { replace: true });
     },
   });
 }

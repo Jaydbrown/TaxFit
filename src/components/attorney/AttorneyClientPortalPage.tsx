@@ -6,7 +6,7 @@ import Card from '@/components/common/Card';
 import Button from '@/components/common/Button';
 import Input from '@/components/common/Input';
 import Modal from '@/components/common/Modal'; 
-import { Users, FolderOpen, MessageSquare, Search, FileText, Loader2, Upload, Settings, Filter, Plus } from 'lucide-react';
+import { Users, FolderOpen, MessageSquare, Search, FileText, Loader2, Upload, Filter, Plus } from 'lucide-react';
 import { toast } from 'react-hot-toast';
 
 // Assuming these hooks are correctly implemented

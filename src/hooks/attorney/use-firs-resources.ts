@@ -1,6 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
 // Assume apiClient and types are defined elsewhere
-import apiClient from '@/lib/api-client';
 // import { ApiError, ApiResponse } from '@/types'; 
 
 // --- Type Definitions ---

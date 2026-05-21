@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
-import { useForm, SubmitHandler } from 'react-hook-form';
+import { useForm, type SubmitHandler } from 'react-hook-form';
 import { toast } from 'react-hot-toast';
 import { Clock, CheckCircle, XCircle, FileText, Briefcase, DollarSign, Loader2, ArrowLeft, MapPin } from 'lucide-react';
 
@@ -139,7 +139,7 @@ const AdminAttorneyReviewPage: React.FC = () => {
         }
     };
     
-    const handleDocumentVerify = (docId: string, currentStatus: boolean) => {
+    const handleDocumentVerify = (_docId: string, _currentStatus: boolean) => {
         toast('Document verification feature coming soon.', { icon: 'ℹ️' });
     };
 

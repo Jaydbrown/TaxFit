@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { User, Shield, Bell, FileText } from 'lucide-react';
 import Layout from '@/components/layout/Layout';
 import Card from '@/components/common/Card';

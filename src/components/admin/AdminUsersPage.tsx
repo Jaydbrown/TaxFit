@@ -47,7 +47,7 @@ const AdminUsersPage: React.FC = () => {
     });
     
     // --- Data Fetching: Use the spread operator to pass properties ---
-    const { data, isLoading, isFetching, refetch } = useAdminUserList({
+    const { data, isLoading, isFetching } = useAdminUserList({
         ...appliedFilters // <-- CORRECT SYNTAX: Spreading properties into the arguments object
     });
 

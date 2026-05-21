@@ -1,8 +1,7 @@
-import React from "react";
 import { useState, useEffect } from "react";
 
 export default function Cards() {
-  const [isScrolling, setIsScrolling] = useState(false);
+  const [_isScrolling, setIsScrolling] = useState(false);
   useEffect(() => {
     const handleScroll = () => {
       setIsScrolling(window.scrollY > 0);

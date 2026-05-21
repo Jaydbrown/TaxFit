@@ -17,7 +17,7 @@ import { formatCurrency } from '@/utils/helpers';
 import Layout from '@/components/layout/Layout';
 
 // Assuming types are available via imports or globally defined
-import type { User, AttorneyProfile } from '@/types'; 
+import type { AttorneyProfile } from '@/types'; 
 // Assuming AttorneyDashboardStats is correctly imported from '@/types/dashboard' as per your input
 import type { AttorneyDashboardStats } from '@/types/dashboard' 
 

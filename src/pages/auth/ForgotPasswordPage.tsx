@@ -1,18 +1,14 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { z } from 'zod';
 import { ArrowRight, ArrowLeft, Mail, CheckCircle } from 'lucide-react';
 import Input from '@/components/common/Input';
 import Button from '@/components/common/Button';
 import { useForgotPassword } from '@/hooks/auth/use-auth';
+import { forgotPasswordSchema, type ForgotPasswordInput } from '@/lib/validations';
 
-const forgotPasswordSchema = z.object({
-  email: z.string().email('Please enter a valid email address'),
-});
-
-type ForgotPasswordFormData = z.infer<typeof forgotPasswordSchema>;
+type ForgotPasswordFormData = ForgotPasswordInput;
 
 export default function ForgotPasswordPage() {
   const [emailSent, setEmailSent] = useState(false);

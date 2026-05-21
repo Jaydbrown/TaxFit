@@ -1,6 +1,5 @@
 // src/components/booking/BookingActionPanel.tsx
 
-import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-hot-toast';
 import { Loader2, Zap, X, Star } from 'lucide-react';
@@ -31,7 +30,7 @@ export default function BookingActionPanel({ booking }: BookingActionPanelProps)
   const { mutate: cancel, isPending: isCancelling } = useCancelBooking();
   const { mutate: pay, isPending: isProcessingPayment } = useProcessPayment();
   // NOTE: Review should typically be done via a dedicated modal or page
-  const { mutate: submitReview, isPending: isReviewing } = useSubmitReview(); 
+  const { isPending: isReviewing } = useSubmitReview(); 
   
   const bookingId = booking._id;
 

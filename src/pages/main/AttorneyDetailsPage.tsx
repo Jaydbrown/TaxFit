@@ -1,4 +1,3 @@
-import React from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { ArrowLeft, MapPin, Briefcase, Star, DollarSign, Award, ArrowRight } from 'lucide-react';
 import { useAuthStore } from '@/store/auth-store';
